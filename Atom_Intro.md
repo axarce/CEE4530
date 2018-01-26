@@ -2,7 +2,7 @@
 Get help at
 [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links)
 ## Headers
-Headers like the one above are made by using the # symbol. Each additional # moves down one level in the outline of your document. 
+Headers like the one above are made by using the # symbol. Each additional # moves down one level in the outline of your document.
 # Heading 1
 ## Heading 2
 ### Heading 3
@@ -34,11 +34,15 @@ If you want to ~~strikethrough~~ something you can use two tildas ~~ before and 
 
 Make sure that you have the Markdown Table Editor package. To start a table you use the vertical line. Type your column headers in between and hit enter. Then in preview a table should appear and use can use the table editor to make the rest of your table and make it look nice.
 
+| Col1 | Col2 | Col3 |
+| ---- | ---- | ---- |
+|      |      |      |
+|      |      |      |
 
 
 
-Add a link to the course syllabus below.
-
+22Add a link to the course syllabus below.
+https://confluence.cornell.edu/display/cee4530/Syllabus
 
 #Latex
 Create an equation at [codecogs](https://www.codecogs.com/latex/eqneditor.php)
