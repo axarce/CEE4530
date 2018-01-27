@@ -54,7 +54,7 @@ $$Headloss=K\frac{V^{2}}{2g}$$
 
 # Python
 ```Python
-from aide_design.play import *
+from aide_design.play import*
 #Below are the items that were imported by the code above so that you know what abbreviations to use in your code.
 
 # Third-party imports
@@ -89,3 +89,4 @@ V=1.85*u.mm/u.s
 Runtime=60*u.hour
 Height=(V*Runtime).to(u.m)
 print(Height)
+```
