@@ -32,6 +32,19 @@ Report the following
 
 ```python
 # insert your answer here
+from aide_design.play import*
+L = 2.5*u.km
+Pop = 4000
+Flow = 10*u.L/u.s
+Elevation_i = 1500*u.m
+Elevation_f = 1440*u.m
+K_e = 0.5 + 1
+roughness = 0.1*u.mm
+Critical_viscosity = 0
+for Temp in range(10,20)
+  Critical_viscosity(i) = pc.viscosity_kinematic(Temp)
+
+
 ```
 
 ### 2)
