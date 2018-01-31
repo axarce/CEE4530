@@ -76,6 +76,7 @@ print(fricfactor)
 ### 4)
 Check to see if the fluids functions are internally consistent by calculating the head loss given the flow rate that you calculated and comparing that head loss with the elevation difference. Note that the Moody diagram has an accuracy of about ±5% for smooth pipes and ±10% for rough pipes [Moody, 1944](http://user.engineering.uiowa.edu/~me_160/lecture_notes/MoodyLFpaper1944.pdf).
 ```python
+head_loss = pc.headloss(max_flow, act_inner_dia, L, Kin_visc, roughness, K_e)
 # insert your answer here
 
 ```
