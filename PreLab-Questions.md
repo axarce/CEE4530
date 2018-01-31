@@ -28,8 +28,15 @@
     ```
     6. How much of a 1 M solution would you have to ingest to give a 50% chance of death?
     ```python
+    from aide_design.play import *
+    ld50self = 83.12*u.g
+    molarity = 1*u.mole/u.liter
+    NaNO3MolWt = 84.99*u.g/u.mole
+    ld50vol = ld50self/(molarity*NaNO3MolWt)
+    print(ld50vol)
     #insert calculations here
     ```
     7. Are there any chronic effects of exposure to sodium nitrate?
+      Chronic exposure might be toxic to blood and produce organ damage.
 5. You are in the laboratory preparing chemical solutions for an experiment and it is lunchtime. You decide to go to CTB to eat. What must you do before leaving the laboratory?
   You must wash your hands prior to leaving the laboratory.
