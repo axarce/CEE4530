@@ -34,16 +34,17 @@ Report the following
 # insert your answer here
 from aide_design.play import*
 L = 2.5*u.km
-Pop = 4000
 Flow = 10*u.L/u.s
 Elevation_i = 1500*u.m
 Elevation_f = 1440*u.m
+h_l = Elevation_i - Elevation_f
 K_e = 0.5 + 1
 roughness = 0.1*u.mm
-Critical_viscosity = 0
-for Temp in range(10,20)
-  Critical_viscosity(i) = pc.viscosity_kinematic(Temp)
-
+Critical_temp = 10*u.degC
+Kin_visc = pc.viscosity_kinematic(Critical_temp)
+print(Kin_visc)
+Min_dia = pc.diam_pipe(Flow,h_l,L,Kin_visc, roughness, K_e).to(u.mm)
+print(Min_dia)
 
 ```
 
@@ -52,6 +53,11 @@ What is the maximum flow rate that can be carried by this pipe at the coldest de
 Display the flow rate in L/s using the .to method.
 
 ```python
+act_inner_dia = 4*u.inch
+max_flow = pc.flow_pipe(act_inner_dia, h_l, L, Kin_visc, roughness, K_e).to(u.L/u.s)
+print(max_flow)
+
+
 # insert your answer here
 
 ```
@@ -59,7 +65,11 @@ Display the flow rate in L/s using the .to method.
 ### 3)
 What is the Reynolds number and friction factor for this maximum flow? Assign these values to variable names so you can plot them later on the Moody diagram.
 ```python
-x=3
+Re = pc.re_pipe(max_flow, act_inner_dia, Kin_visc)
+print(Re)
+fricfactor = pc.fric(max_flow, act_inner_dia, Kin_visc, roughness)
+print(fricfactor)
+
 
 ```
 
