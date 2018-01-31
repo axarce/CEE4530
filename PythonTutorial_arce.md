@@ -45,7 +45,6 @@ Kin_visc = pc.viscosity_kinematic(Critical_temp)
 print(Kin_visc)
 Min_dia = pc.diam_pipe(Flow,h_l,L,Kin_visc, roughness, K_e).to(u.mm)
 print(Min_dia)
-
 ```
 
 ### 2)
@@ -77,13 +76,21 @@ print(fricfactor)
 Check to see if the fluids functions are internally consistent by calculating the head loss given the flow rate that you calculated and comparing that head loss with the elevation difference. Note that the Moody diagram has an accuracy of about ±5% for smooth pipes and ±10% for rough pipes [Moody, 1944](http://user.engineering.uiowa.edu/~me_160/lecture_notes/MoodyLFpaper1944.pdf).
 ```python
 head_loss = pc.headloss(max_flow, act_inner_dia, L, Kin_visc, roughness, K_e)
+print(head_loss)
 # insert your answer here
-
 ```
+Answer is within 10% easily for head loss.
 
 ### 5)
 Suppose an AguaClara plant is designed to be built up the hill from the distribution tank. The  transmission line will need to be lengthened by 30 m and the elevation of the inlet to the entrance tank will be 1450 m. The rerouting will also require the addition of 3 elbows with a minor loss coefficient of 0.3 each. What is the new maximum flow from the water source?
 ```python
+  New_Ke = K_e + 0.3 + 0.3 + 0.3
+  New_L = L + 30*u.m
+  New_ele_final = 1450*u.m
+  New_hl = Elevation_i - New_ele_final
+  New_flowrate = pc.flow_pipe(act_inner_dia, New_hl, New_L, Kin_visc, roughness, New_Ke).to(u.L/u.s)
+  print(New_flowrate)
+  
 # insert your answer here
 
 ```
