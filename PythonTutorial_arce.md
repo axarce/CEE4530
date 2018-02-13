@@ -90,7 +90,7 @@ Suppose an AguaClara plant is designed to be built up the hill from the distribu
   New_hl = Elevation_i - New_ele_final
   New_flowrate = pc.flow_pipe(act_inner_dia, New_hl, New_L, Kin_visc, roughness, New_Ke).to(u.L/u.s)
   print(New_flowrate)
-  
+
 # insert your answer here
 
 ```
@@ -107,6 +107,12 @@ Since the equation for calculating the friction factor is different for laminar 
 
 ```python
 # insert your answer here
+def fofRe(Re, dimlessPipeRoughness)
+  if Re >= 2100:
+    f = (0.25 / np.log10((dimlessPipeRoughness/3.7) + 5.74 / Re ** 0.9) ** 2)
+  else:
+    f = 64 / Re
+  return f
 
 ```
 
