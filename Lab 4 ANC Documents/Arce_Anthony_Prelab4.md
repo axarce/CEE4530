@@ -37,22 +37,9 @@ plt.ylabel('Fraction of total carbonates')
 plt.legend(['alpha_0', 'alpha_1', 'alpha_2'], loc='upper right')
 plt.show()
 
-def ANC_closed(pH,Total_Carbonates):
-  return Total_Carbonates*(alpha1_carbonate(pH)+2*alpha2_carbonate(pH)) + Kw/invpH(pH) - invpH(pH)
 
-def ANC_open(pH):
-  return ANC_closed(pH,P_CO2*K_Henry_CO2/alpha0_carbonate(pH))
-
-import scipy
-from scipy import optimize
-optimize.brentq(ANC_open(pH),5, 7)
 ```
-2. For a pure strong acid at pH 3.2 we can simplify the equation for
-Acid Neutralizing Capacity (ANC)
-$${\text{ANC}} = [HCO_3^ - {\text{] + 2[CO}}_3^{ - 2}{\text{] + [O}}{{\text{H}}^{\text{ - }}}{\text{] - [}}{{\text{H}}^{\text{ + }}}{\text{]}}$$
-to   (ANC)
-$${\text{ANC}} = [HCO_3^ - {\text{] + 2[CO}}_3^{ - 2}{\text{] + [O}}{{\text{H}}^{\text{ - }}}{\text{] - [}}{{\text{H}}^{\text{ + }}}{\text{]}}$$
-because XYZ
+
 ```Python
 from aide_design.play import*
 import scipy
@@ -98,17 +85,18 @@ plt.ylabel('ANC')
 plt.yscale('log')
 plt.show()
 
-q = 10  # initial guess to run the solution
-diff = ((P_CO2.magnitude*K_Henry_CO2.magnitude/alpha0_carbonate(q).magnitude)*(alpha1_carbonate(q).magnitude + 2*alpha2_carbonate(q).magnitude) + (Kw.magnitude/ 10**-q) - 10**-q
+q = 8  # initial guess to run the solution
+diff = (P_CO2.magnitude*K_Henry_CO2.magnitude/alpha0_carbonate(q).magnitude)*(alpha1_carbonate(q).magnitude + 2*alpha2_carbonate(q).magnitude) + (Kw.magnitude/ 10**-q) - 10**-q
 diff
-while diff<0:
+
+while diff<10**-9:
     LHS = ANC_o_Cayuga
     RHS = (0.0003162*0.03162/alpha0_carbonate.magnitude)*(alpha1_carbonate.magmagnitude + 2*alpha2_carbonate.magnitude) + (1e-14/ 10**-q.magnitude) - 10**-q.magnitude
     diff = LHS - RHS
-    q = q - 0.0001 #iterate to solve
+    Q = q - 0.0001
 
-
-print(q)
+    #iterate to solve
+print(Q)
 ```
 
 2. ANC influent is 0.00063095734 mol/L This is a strong acid so the hydrogen ion concentration is much higher than the carbonate concentration. Hydroxide is also orders of magnitude less present than the hydrogen ions. Since we know that the pH of our solution is 3.2, we can simplify Acid Neutralizing Capacity (ANC) to having only one relevant term, the negative concentration of hydrogen ions:
