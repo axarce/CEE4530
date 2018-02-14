@@ -1,7 +1,7 @@
 ## Laboratory 4 PreLab Questions
 ##### Anthony Arce
 
-1. The ANC of
+1. 
 ```python
 from aide_design.play import*
 Kw = 10**(-14) * (u.mole/u.L)**2
