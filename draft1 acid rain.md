@@ -13,8 +13,8 @@ file = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain_Good Data.cs
 array1 = np.array(file)
 Flow_Rate = 4.499 * u.milliliter / u.s
 Volume = 4 * u.L
-ResidenceTime = Volume / Flow_Rate
-Time_Min = array1[:,1]
+ResidenceTime = (Volume / Flow_Rate).to(u.min)
+Time_Min = array1[:,1] * u.min
 pH1 = array1[:,2]
 # plotting
 plt.figure('ax',(10,8))
@@ -22,12 +22,12 @@ plt.plot(Time_Min, pH1)
 # put in your x and y variables
 plt.xlabel('Time (min)', fontsize=15)
 plt.ylabel('pH', fontsize=15)
-plt.savefig('images/AcidRain_1.png')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg')
 plt.show()
 
 ```
 The results are shown in Figure 1.
- ![graph](images/AcidRain_1.png)
+ ![graph](C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg)
 
 ## Q2 Experiment 1. Calculate alpha1, 2, and 3 based on the pH measures at each time point
 ```python
@@ -37,8 +37,10 @@ K2_carbonate = 10**(-10.25)*u.mol/u.L
 K_Henry_CO2 = 10**(-1.5) * u.mole/(u.L*u.atm)
 P_CO2 = 10**(-3.5) * u.atm
 
+
 ph_exp1 = np.array([7.91356, 7.242599, 6.663552, 4.388395, 3.649247])
 ph_exp2 = np.array([7.966759, 8.002065,  7.61718, 7.44151, 6.447749])
+
 
 def invpH(pH):
   return 10**(-pH)*u.mol/u.L
@@ -59,27 +61,38 @@ alpha0_exp1 = alpha0_carbonate(ph_exp1)
 alpha1_exp1 = alpha1_carbonate(ph_exp1)
 alpha2_exp1 = alpha2_carbonate(ph_exp1)
 
+
+
 alphatotal_exp1 = alpha0_exp1 + alpha1_exp1 + alpha2_exp1
-alphatotal_exp1
+(alphatotal_exp1)
 ```
 
 ## **Q3 Experiment 1.**
 ```python
 pH_0min = 7.91356
-H_0min = -10^7.91356
-ANC_0 = (.6235/84.0661)/4
+H_0min = 10**-7.91356
+ANC_in = -10 ** -3 * u.mol / u.L
+ANC_0 = (.6235 * u.g / (84.0661 * (u.g / u.mol)) ) / (4*u.L)
+ANC_0
 
-def ANC_out(ANC_in, ANC_0, time, theta)
-  ANC_out = (ANC_in*(1-exp^-(time/theta))+ANC_0*exp^-(time/theta))
-  return ANC_out
+help(np.zeros)
+ANC_Out = np.zeros(len(Time_Min))
+ANC_Out
+Time_Min
+print(len(ANC_0))
+for i in range(0,len(Time_Min)):
+  ANC_Out[i] = (ANC_in*(1-(np.exp(-Time_Min[i]/ResidenceTime)))+ANC_0*(np.exp(-Time_Min[i]/ResidenceTime)))
 
-  plt.figure('ax',(10,8))
-  plt.plot(Time_Min, pH1)
-  # put in your x and y variables
-  plt.xlabel('Time (min)', fontsize=15)
-  plt.ylabel('pH', fontsize=15)
-  plt.savefig('images/AcidRain_1_conservative.png')
-  plt.show()
+
+
+
+plt.figure('ax',(10,8))
+plt.plot(Time_Min, ANC_Out)
+# put in your x and y variables
+plt.xlabel('Time (min)', fontsize=15)
+plt.ylabel('pH', fontsize=15)
+plt.savefig('images/AcidRain_1_conservative.png')
+plt.show()
 
 ```
 ## **Q4 Experiment 1**
@@ -91,7 +104,8 @@ $ANC = C_{T}*(alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\le
 C_T*ANC_0*(alpha1_carbonate) + 2*alpha2_carbonate
 
 def ANC_out(ANC_in, ANC_0, time, theta)
-  ANC_out = (ANC_in*(1-exp^-(time/theta))+ANC_0*exp^-(time/theta)) return ANC_out
+  ANC_out = (ANC_in*(1-exp^-(time/theta))+ANC_0*exp^-(time/theta))
+  return ANC_out
 
 ```
 ## Q5 Experiment 1
@@ -117,13 +131,15 @@ NaHCO3_in = 0.6235
 C_in = NaHCO3_in/Volume
 
 array1 = np.array(file)
-Flow_Rate = 4.499 * u.milliliter / u.s
+Flow_Rate = 4.499 * (u.milliliter / u.s)
 Volume = 4 * u.L
-ResidenceTime = Volume / Flow_Rate
-Time_Min = array1[:,1]
-theta= 8088.914
+ResidenceTime = (Volume / Flow_Rate).to(u.min)
+ResidenceTime
+Time_Min = array1[:,1] * u.min
 
-C_T_conservative = C_in*e**(-Time_Min/ResidenceTime)
+np.exp(1)
+
+C_T_conservative = C_in*np.exp(-Time_Min/ResidenceTime)
 
 # plotting
 plt.figure('Conservative Ct',(10,8))
@@ -179,7 +195,7 @@ The comparison of the first and second experiment are shown in Figure 1.
 ```python
 Flow_Rate2 = 5.0779 * u.milliliter / u.s
 Volume = 4 * u.L
-ResidenceTime = Volume / Flow_Rate
+ResidenceTime = (Volume / Flow_Rate).to(u.min)
 exp2 = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain _2.csv')
 exp2_array = np.array(exp2)
 Time_Min2 = exp2_array[:,2]
