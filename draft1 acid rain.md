@@ -71,18 +71,16 @@ alphatotal_exp1 = alpha0_exp1 + alpha1_exp1 + alpha2_exp1
 ```python
 pH_0min = 7.91356
 H_0min = 10**-7.91356
-ANC_in = -10 ** -3 * u.mol / u.L
-ANC_0 = (.6235 * u.g / (84.0661 * (u.g / u.mol)) ) / (4*u.L)
-ANC_0
+ANC_in = -10 ** -3 *  u.mol / u.L
+ANC_0 =  (.6235 * u.g / (84.0661 * (u.g / u.mol)) ) / (4*u.L)
 
-help(np.zeros)
-ANC_Out = np.zeros(len(Time_Min))
-ANC_Out
-Time_Min
-print(len(ANC_0))
+ANC_Out = np.zeros(len(Time_Min)) * u.mol/u.L
+print(len(Time_Min))
+print(len(ANC_Out))
 for i in range(0,len(Time_Min)):
-  ANC_Out[i] = (ANC_in*(1-(np.exp(-Time_Min[i]/ResidenceTime)))+ANC_0*(np.exp(-Time_Min[i]/ResidenceTime)))
-
+  ANC_Out[i] = ANC_in * (1-np.exp(-Time_Min[i]/ResidenceTime)) + ANC_0 * np.exp(-Time_Min[i]/ResidenceTime)
+  i = i + 1
+ANC_Out
 
 
 
@@ -91,7 +89,7 @@ plt.plot(Time_Min, ANC_Out)
 # put in your x and y variables
 plt.xlabel('Time (min)', fontsize=15)
 plt.ylabel('pH', fontsize=15)
-plt.savefig('images/AcidRain_1_conservative.png')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\Question3.jpg')
 plt.show()
 
 ```
