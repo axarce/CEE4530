@@ -189,7 +189,7 @@ The comparison of the first and second experiment are shown in Figure 1.
 ** Figure 1. Lake pH as a function of hydraulic residence time(?).**
 
 ## Q10. Analyze the data from the 2nd experiment and graph the data appropriately what did you learn from the 2nd experiment
-## Q1 Experiment 2
+## Experiment 2
 ```python
 Flow_Rate2 = 5.0779 * u.milliliter / u.s
 Volume = 4 * u.L
