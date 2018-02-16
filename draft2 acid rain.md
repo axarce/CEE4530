@@ -1,4 +1,5 @@
-```python
+
+```Python
 from aide_design.play import*
 ```
 ###### Anthony Arce
@@ -7,7 +8,7 @@ from aide_design.play import*
 
 #### **Data Analysis for Week 3 Lab: Acid Rain**
 ## **Q1. Experiment 1**
-```python
+```Python
 # import your file
 file = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain_Good Data.csv') # the second experiment, I'm calling it #1 since we're treating it as #1 for analysis
 array1 = np.array(file)
@@ -30,7 +31,8 @@ The results are shown in Figure 1.
  ![graph](C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg)
 
 ## Q2 Experiment 1. Calculate alpha1, 2, and 3 based on the pH measures at each time point
-```python
+```Python
+
 Kw = 10**(-14) * (u.mole/u.L)**2
 K1_carbonate = 10**(-6.37)*u.mol/u.L
 K2_carbonate = 10**(-10.25)*u.mol/u.L
@@ -106,9 +108,11 @@ def ANC_out(ANC_in, ANC_0, time, theta)
   return ANC_out
 
 ```
+
 ## Q5 Experiment 1
 Calculate ANC using the equation (1.15):
   $ANC = \frac{P_{CO_{2}}K_{H}}{a_{0}}*(alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+
 ```python
 ANC=P_CO2*K_Henry_CO2/alpha0_exp1*(alpha1_exp1+2*alpha2_exp1)+K_Henry_CO2/H_0min-H_0min
 return ANC
