@@ -30,7 +30,7 @@ plt.show()
 The results are shown in Figure 1.
  ![graph](C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg)
 
-## Q2 Experiment 1. Calculate alpha1, 2, and 3 based on the pH measures at each time point
+## Q2 Experiment 1. Calculate alpha 0, 1, and 2 based on the pH measures at each time point
 ```Python
 
 Kw = 10**(-14) * (u.mole/u.L)**2
@@ -63,11 +63,9 @@ alpha0_exp1 = alpha0_carbonate(ph_exp1)
 alpha1_exp1 = alpha1_carbonate(ph_exp1)
 alpha2_exp1 = alpha2_carbonate(ph_exp1)
 
-
-
 alphatotal_exp1 = alpha0_exp1 + alpha1_exp1 + alpha2_exp1
-(alphatotal_exp1)
 ```
+
 
 ## **Q3 Experiment 1.**
 ```python
@@ -98,7 +96,7 @@ plt.show()
 ## **Q4 Experiment 1**
 
 Calculate ANC using the equation (1.11):
-$ANC = C_{T}*(alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+$ANC = C_{T} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
 
 ```python
 C_T*ANC_0*(alpha1_carbonate) + 2*alpha2_carbonate
