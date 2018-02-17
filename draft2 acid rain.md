@@ -64,6 +64,9 @@ alpha1_exp1 = alpha1_carbonate(ph_exp1)
 alpha2_exp1 = alpha2_carbonate(ph_exp1)
 
 alphatotal_exp1 = alpha0_exp1 + alpha1_exp1 + alpha2_exp1
+
+# Alpha total array is unable to be displayed without removing units of dimensionless, so .magnitude is necessary to obtain the desired array.
+print(alphatotal_exp1.magnitude)
 ```
 
 
@@ -80,40 +83,56 @@ print(len(ANC_Out))
 for i in range(0,len(Time_Min)):
   ANC_Out[i] = ANC_in * (1-np.exp(-Time_Min[i]/ResidenceTime)) + ANC_0 * np.exp(-Time_Min[i]/ResidenceTime)
   i = i + 1
-ANC_Out
-
-
 
 plt.figure('ax',(10,8))
 plt.plot(Time_Min, ANC_Out)
 # put in your x and y variables
 plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('pH', fontsize=15)
+plt.ylabel('ANC_Effluent (mg/L)', fontsize=15)
 plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\Question3.jpg')
 plt.show()
 
 ```
+
+
+
 ## **Q4 Experiment 1**
 
 Calculate ANC using the equation (1.11):
 $ANC = C_{T} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
 
 ```python
-C_T*ANC_0*(alpha1_carbonate) + 2*alpha2_carbonate
+ANC_Out_Closed = np.zeros(len(pH1)) * u.mol / u.L
+for i in range(0,len(pH1)):
+  ANC_Out_Closed[i] = ANC_in * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) + Kw / invpH(pH1[i]) - invpH(pH1[i])
+  i = i + 1
 
-def ANC_out(ANC_in, ANC_0, time, theta)
-  ANC_out = (ANC_in*(1-exp^-(time/theta))+ANC_0*exp^-(time/theta))
-  return ANC_out
+
+
 
 ```
 
 ## Q5 Experiment 1
 Calculate ANC using the equation (1.15):
-  $ANC = \frac{P_{CO_{2}}K_{H}}{a_{0}}*(alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+  $ANC = \frac{P_{CO_{2}}K_{H}}{a_{0}} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+
+
 
 ```python
-ANC=P_CO2*K_Henry_CO2/alpha0_exp1*(alpha1_exp1+2*alpha2_exp1)+K_Henry_CO2/H_0min-H_0min
-return ANC
+ANC_Out_Open = np.zeros(len(pH1)) * u.mol / u.L
+for i in range(0, len(pH1)):
+  ANC_Out_Open[i] = (P_CO2  * K_Henry_CO2) * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) / (alpha0_carbonate(pH1[i])) + (Kw / invpH(pH1[i])) - invpH(pH1[i])
+  i = i + 1
+
+plt.figure('ax',(10,8))
+ANC_Effluent = plt.plot(Time_Min, ANC_Out, Time_Min, ANC_Out_Closed, Time_Min, ANC_Out_Open)
+# put in your x and y variables
+plt.legend(['Conservative', 'Closed', 'Open'], loc = 'best')
+plt.xlabel('Time (min)', fontsize=15)
+plt.ylabel('ANC (mg/L)', fontsize=15)
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\ANC_Effluent.jpg')
+plt.show()
+
 ```
 ## Q6 Experiment 1
 Equation 1.21 gives: $ANC_{out} = \left [ ANC_{in}\cdot \left ( 1-e ^{\frac{-t}{\Theta }} \right )\right ]+   ANC_{0}\cdot e^{\frac{-t}{\Theta }}$
@@ -127,49 +146,76 @@ $C_{T}=C_{T_{0}}\cdot e^{\frac{-t}{\theta}}$
 
 ```python
 C_0 = 0
-NaHCO3_in = 0.6235
+NaHCO3_in = (0.6235 / 84.007) * u.mol
 C_in = NaHCO3_in/Volume
-
+C_in
 array1 = np.array(file)
 Flow_Rate = 4.499 * (u.milliliter / u.s)
 Volume = 4 * u.L
 ResidenceTime = (Volume / Flow_Rate).to(u.min)
-ResidenceTime
 Time_Min = array1[:,1] * u.min
 
-np.exp(1)
+C_T_conservative = np.zeros(len(Time_Min)) * u.mol / u.L
+for i in range(0,len(Time_Min)):
+  C_T_conservative[i] = C_in * np.exp(-Time_Min[i]/ResidenceTime)
+  i = i + 1
 
-C_T_conservative = C_in*np.exp(-Time_Min/ResidenceTime)
-
+C_T_conservative
 # plotting
 plt.figure('Conservative Ct',(10,8))
-plt.plot(Time_Min, C_T)
+plt.plot(Time_Min, C_T_conservative)
 # put in your x and y variables
 plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('C_T_conservative', fontsize=15)
-plt.savefig('images/AcidRain_3.png')
+plt.ylabel('C_T', fontsize=15)
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\C_T.jpg')
 plt.show()
 
 ```
 # Q7 Experiment 1
 Derive an equation for $C_{T}$ as a function of ANC and pH using the following equation:
 $ANC = C_{T}(alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
-When in equilibrium with atmospheric CO2, then $C_{T}=\frac{P_{CO_{2}}K_{H}}{a_{0}}$
+
+Solving for $C_{T}$ (assuming $[OH]^{-}$ is negligible) yields:
+$C_T = \frac{ANC_{t} + [H^{+}]}{(a_{1} + 2 a_{2})}$
 
 ```python
-C_T0=P_CO2*K_Henry_CO2/alpha0_exp1
-C_T_closed=C_T0*exp^-(Time_Min/theta)
-print C_T_closed
+C_T_closed = np.zeros(len(Time_Min)) * u.mol / u.L
+
+for i in range(0, len(Time_Min)):
+  C_T_closed[i] = (ANC_Out[i] + invpH(pH1[i])) / (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i]))
+  i = i + 1
+
+
 
 ```
+Equilibrium $C_T = \frac{P_{CO2} + K_{H}}{a_{0}}$
+
+
 # Q8 Experiment 1
 ```python
+C_T_equil = np.zeros(len(pH1)) * u.mol / u.L
 
+for i in range(0, len(pH1)):
+  C_T_equil[i] = (P_CO2 * K_Henry_CO2)  / alpha0_carbonate(pH1[i])
+  i = i + 1
+
+plt.figure('Ct',(10,8))
+plt.plot(Time_Min, C_T_conservative, Time_Min, C_T_closed, Time_Min, C_T_equil)
+# put in your x and y variables
+plt.legend(['Conservative', 'Closed', 'Equilibrium'], loc = 'best')
+plt.xlabel('Time (min)', fontsize=15)
+plt.ylabel('C_T (mol/L)', fontsize=15)
+plt.yscale('log')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\C_T.jpg')
+plt.show()
 ```
+
+
 ## Q9 Experiment 1
-```python
+The lake is best modeled after a closed system, it behaves as a non-volatile system. To change the lake to a volatile system, there would need to be mixing due to a wind current to drive equilibrium with the atmosphere.
 
-```
+
+
 ## Q10. Analyze the data from the 2nd experiment and graph the data appropriately what did you learn from the 2nd experiment
 
 
@@ -205,6 +251,7 @@ plt.plot(Time_Min2, ph_exp2)
 # put in your x and y variables
 plt.xlabel('Time (min)', fontsize=15)
 plt.ylabel('pH', fontsize=15)
+plt.savefig()
 plt.show()
 ```
 
