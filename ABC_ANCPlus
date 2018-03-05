@@ -6,8 +6,11 @@ from aide_design.play import*
 ###### Elle Blake
 ###### Ajara Cobourne
 
-#### **Data Analysis for Week 3 Lab: Acid Rain**
+#### **Data Analysis for Week 44 Lab: Acid Neutralizing Capacity**
+
+##Objectives
 ## **Q1. Experiment 1**
+
 ```Python
 # import your file
 file = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain_Good Data.csv') # the second experiment, I'm calling it #1 since we're treating it as #1 for analysis
@@ -106,7 +109,6 @@ ANC_Out_Closed = np.zeros(len(pH1)) * u.mol / u.L
 for i in range(0,len(pH1)):
   ANC_Out_Closed[i] = ANC_in * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) + Kw / invpH(pH1[i]) - invpH(pH1[i])
   i = i + 1
-
 
 
 
@@ -234,7 +236,7 @@ plt.xlabel('Time (min)', fontsize=15)
 plt.ylabel('pH', fontsize=15)
 plt.show()
 ```
-From the second experiment, we learned that the sensitivity of the electrode in the pH probe to electricity was enough to induce large variability in what should have been predictable behavior of a titration curve. In the first experiment, our data better reflected the true nature of the predictable titration curve. 
+From the second experiment, we learned that the sensitivity of the electrode in the pH probe to electricity was enough to induce large variability in what should have been predictable behavior of a titration curve. In the first experiment, our data better reflected the true nature of the predictable titration curve.
 
 
 # Additional Questions

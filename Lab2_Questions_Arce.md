@@ -24,9 +24,25 @@ File = r'C:\Users\Anthony\github\CEE4530_axa2\CEE4530_Lab1data_ohe3.csv'
 data = pd.read_csv(File)
 info = np.array(data)
 
-plt.plot(info[:,0], info[:,1:7])
+lines = plt.plot(info[:,0], info[:,1:7])
 plt.xlabel('Wavelengh (nm)')
 plt.ylabel('Absorbance')
+plt.legend(('0 mg/L', '1 mg/L', '2 mg/L', '3 mg/L', '4 mg/L', '5 mg/L'), loc ='upper right')
 plt.show()
 
 ```
+
+# If Beer's law is obeyed, then the graph should look like scalar multiples of the same curve.
+
+4. Did you use interpolation or extrapolation to get the concentration of the unknown?
+
+Used interpolation to get the concentration of the unknown. The unknown was within the values of the standards, if it had been beyond, then it would be extrapolation.
+
+5. What colors of light are most strongly absorbed by methylene blue?
+
+The colors that methylene blue absorb strongly correspond to 290 nm and 660 nm,
+ultraviolet and and red-orange color.
+
+6. What measurement controls the accuracy of the density measurement for the NaCl solution? What density did you expect (see prelab 2)? Approximately what should the accuracy be? 	
+
+The measurement that controls the accuracy of the density measurement for the NaCl solution is the pipette. The accuracy should be within +/- one percent! The density should be

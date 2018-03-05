@@ -1,267 +1,112 @@
 
 ```Python
 from aide_design.play import*
+from scipy import stats
+import Environmental_Processes_Analysis as EPA
+import importlib
+importlib.reload(EPA)
 ```
 ###### Anthony Arce
 ###### Elle Blake
 ###### Ajara Cobourne
 
-#### **Data Analysis for Week 44 Lab: Acid Neutralizing Capacity**
+#### **Data Analysis for Lab 4: Acid Rain and Acid Neutralizing Capacity**
 
 ##Objectives
 
+We are doing this experiment to test the boundaries of the acid neutralizing capacity (ANC) of our lake and examining various methods of determining ANC. To meet our goal we have to test the ANC at various points in the process of remediating a lake with NaCO3. We hoped to observe hydrogen ion conservation, learn how to use the Gran plot to calculate the maximum amount of acid the lake can take before no longer being able to neutralize added acid. Finally we wish to examine whether the ANC of our experiment matched the theoretical ANCs. We expect the results to be applicable to future remediation projects we conduct as Environmental Engineers.This would be particularly useful in projects comparing the qualities of different bodies of water, as ANC is an important characteristic to consider.
 
-## **Q1. Experiment 1**
+##Procedures
 
-```Python
-# import your file
-file = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain_Good Data.csv') # the second experiment, I'm calling it #1 since we're treating it as #1 for analysis
-array1 = np.array(file)
-Flow_Rate = 4.499 * u.milliliter / u.s
-Volume = 4 * u.L
-ResidenceTime = (Volume / Flow_Rate).to(u.min)
-Time_Min = array1[:,1] * u.min
-pH1 = array1[:,2]
-# plotting
-plt.figure('ax',(10,8))
-plt.plot(Time_Min, pH1)
+The procedure was followed as stated in the CEE 4530 Spring 2018 Lab Manual with a few modifications. The team did not measure out 50 ml for each sample, but measured out volumes between 40 ml and 50 ml and recorded the mass and volume of “lake water” for each trail. The titrant used was 0.1 M HCl instead of the concentration stated in the lab manual. Additionally, when adding titrant to lake samples that had a pH higher than approximately 6.5, the titrant was added in increments larger than 0.1 mL.
+
+##Results
+1)	Plot the titration curve of the t=0 sample with 0.05 N HCl (plot pH as a function of titrant volume). Label the equivalent volume of titrant. Label the 2 regions of the graph where pH changes slowly with the dominant reaction that is occurring. (Place labels with the chemical reactions on the graph in the pH regions where each reaction is occurring.) Note that in a third region of slow pH change no significant reactions are occurring (added hydrogen ions contribute directly to change in pH).
+
+```python
+titrPHfile = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Time0TitrantVolpH.csv')
+titrPHarray = np.array(titrPHfile)
+
+VTitrant = titrPHarray[:,0] * u.mL
+pHtime0 = titrPHarray[:,1]
+EquivVol = np.array([0.6915])
+# pHregresion is the value of pH associated with the equivalent volume calculated by using linear regression on the first three points for the time 0.
+pHregression = np.array([5.752641])
+
+plt.plot(VTitrant, pHtime0, 'r-', EquivVol, pHregression, 'bo')
 # put in your x and y variables
-plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('pH', fontsize=15)
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg')
+plt.xlabel('Titrant Vol (mL)')
+plt.ylabel('pH')
+plt.legend(['Titration Curve', 'Equivalent Vol'])
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\titrantpHtime0.jpg')
 plt.show()
 
+
+
+
+ax = point.plot(x='x', y='y', ax=ax, style='bx', label='point')
+
 ```
-The results are shown in Figure 1.
- ![graph](C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg)
+2)	Prepare a Gran plot using the data from the titration curve of the t=0 sample. Use linear regression on the linear region or simply draw a straight line through the linear region of the curve to identify the equivalent volume. Compare your calculation of Ve with that calculated by the pH meter computer program.
 
-## Q2 Experiment 1. Calculate alpha 0, 1, and 2 based on the pH measures at each time point
-```Python
+We defined the First Gran function as:
+$F_{1}=\frac{V_{s}+V_{t}}{V_{s}}\left[ H^{+} \right ]$ The $F_{1}$ is then plotted as a function of $V_{t}$ and as a result, we gain a straight line slope = $\frac{N_{t}}{V_{s}}$.
+We then are able to find the ANC value using the equation $V_{s}ANC = V_{e}N_{t}$ and solving for ANC = $\frac{V_{e}N_{t}}{V_{s}}$.
 
-Kw = 10**(-14) * (u.mole/u.L)**2
-K1_carbonate = 10**(-6.37)*u.mol/u.L
-K2_carbonate = 10**(-10.25)*u.mol/u.L
-K_Henry_CO2 = 10**(-1.5) * u.mole/(u.L*u.atm)
-P_CO2 = 10**(-3.5) * u.atm
-
-
-ph_exp1 = np.array([7.91356, 7.242599, 6.663552, 4.388395, 3.649247])
-ph_exp2 = np.array([7.966759, 8.002065,  7.61718, 7.44151, 6.447749])
-
-
+```python
 def invpH(pH):
-  return 10**(-pH)*u.mol/u.L
+  return 10**(-pH)
+#Define the gran function.
 
-def alpha0_carbonate(pH):
-   alpha0_carbonate = 1/(1+(K1_carbonate/invpH(pH))*(1+(K2_carbonate/invpH(pH))))
-   return alpha0_carbonate
+def F1(V_sample,V_titrant,pH):
+  return (V_sample + V_titrant)/V_sample * invpH(pH)
+VSample = 50*u.mL
+#Create an array of the F1 values.
+F1_data = F1(VSample,VTitrant,pHtime0)
+F1_data
+#By inspection I guess that there are 4 good data points in the linear region.
+N_good_points = 3
+#use scipy linear regression. Note that the we can extract the last n points from an array using the notation [-N:]
+slope, intercept, r_value, p_value, std_err = stats.linregress(titrantVolTime0[-N_good_points:],F1_data[-N_good_points:])
+#reattach the correct units to the slope and intercept.
+intercept = intercept*u.mole/u.L
+slope = slope*(u.mole/u.L)/u.mL
+V_eq = -intercept/slope
 
-def alpha1_carbonate(pH):
-  alpha1_carbonate = 1/((invpH(pH)/K1_carbonate) + 1 + (K2_carbonate/invpH(pH)))
-  return alpha1_carbonate
+V_eq
+#The equivilent volume agrees well with the value calculated by ProCoDA.
+#create an array of points to draw the linear regression line
+x=[V_eq.magnitude,VTitrant[-1].magnitude ]
+y=[0,(VTitrant[-1]*slope+intercept).magnitude]
+#Now plot the data and the linear regression
+plt.plot(VTitrant, F1_data,'o')
+plt.plot(x, y,'r')
+plt.xlabel('Titrant Volume (mL)')
+plt.ylabel('Gran function (mole/L)')
+plt.legend(['data'])
 
-def alpha2_carbonate(pH):
-  alpha2_carbonate = 1/(1+(invpH(pH)/K2_carbonate)*(1+(invpH(pH)/K1_carbonate)))
-  return alpha2_carbonate
-
-alpha0_exp1 = alpha0_carbonate(ph_exp1)
-alpha1_exp1 = alpha1_carbonate(ph_exp1)
-alpha2_exp1 = alpha2_carbonate(ph_exp1)
-
-alphatotal_exp1 = alpha0_exp1 + alpha1_exp1 + alpha2_exp1
-
-# Alpha total array is unable to be displayed without removing units of dimensionless, so .magnitude is necessary to obtain the desired array.
-print(alphatotal_exp1.magnitude)
-```
-
-
-## **Q3 Experiment 1.**
-```python
-pH_0min = 7.91356
-H_0min = 10**-7.91356
-ANC_in = -10 ** -3 *  u.mol / u.L
-ANC_0 =  (.6235 * u.g / (84.0661 * (u.g / u.mol)) ) / (4*u.L)
-
-ANC_Out = np.zeros(len(Time_Min)) * u.mol/u.L
-print(len(Time_Min))
-print(len(ANC_Out))
-for i in range(0,len(Time_Min)):
-  ANC_Out[i] = ANC_in * (1-np.exp(-Time_Min[i]/ResidenceTime)) + ANC_0 * np.exp(-Time_Min[i]/ResidenceTime)
-  i = i + 1
-
-plt.figure('ax',(10,8))
-plt.plot(Time_Min, ANC_Out)
-# put in your x and y variables
-plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('ANC_Effluent (mg/L)', fontsize=15)
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\Question3.jpg')
+plt.savefig('images/Gran.png')
 plt.show()
 
 ```
 
-
-
-## **Q4 Experiment 1**
-
-Calculate ANC using the equation (1.11):
-$ANC = C_{T} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+3)	Plot the measured ANC of the lake on the same graph as was used to plot the conservative, volatile, and nonvolatile ANC models (see questions 2 to 5 of the Acid Precipitation and Remediation of an Acid Lake lab). Did the measured ANC values agree with the conservative ANC model?
 
 ```python
-ANC_Out_Closed = np.zeros(len(pH1)) * u.mol / u.L
-for i in range(0,len(pH1)):
-  ANC_Out_Closed[i] = ANC_in * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) + Kw / invpH(pH1[i]) - invpH(pH1[i])
-  i = i + 1
-
 
 
 ```
 
-## Q5 Experiment 1
-Calculate ANC using the equation (1.15):
-  $ANC = \frac{P_{CO_{2}}K_{H}}{a_{0}} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+##Discussion
 
 
 
-```python
-ANC_Out_Open = np.zeros(len(pH1)) * u.mol / u.L
-for i in range(0, len(pH1)):
-  ANC_Out_Open[i] = (P_CO2  * K_Henry_CO2) * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) / (alpha0_carbonate(pH1[i])) + (Kw / invpH(pH1[i])) - invpH(pH1[i])
-  i = i + 1
-
-plt.figure('ax',(10,8))
-ANC_Effluent = plt.plot(Time_Min, ANC_Out, Time_Min, ANC_Out_Closed, Time_Min, ANC_Out_Open)
-# put in your x and y variables
-plt.legend(['Conservative', 'Closed', 'Open'], loc = 'best')
-plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('ANC (mg/L)', fontsize=15)
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\ANC_Effluent.jpg')
-plt.show()
-
-```
-## Q6 Experiment 1
-Equation 1.21 gives: $ANC_{out} = \left [ ANC_{in}\cdot \left ( 1-e ^{\frac{-t}{\Theta }} \right )\right ]+   ANC_{0}\cdot e^{\frac{-t}{\Theta }}$
-Modeling the system as a completely mixed flow reaction, we can determine $C_{T}$ as a function of time:
-$C = C_{in}(1-e^{\frac{-t}{\theta }})+C_{0}e^{\frac{-t}{\theta}}$
-
-For a conservative species $C_{T}$ becomes:
-
-$C_{T}=C_{T_{0}}\cdot e^{\frac{-t}{\theta}}$
-
-
-```python
-C_0 = 0
-NaHCO3_in = (0.6235 / 84.007) * u.mol
-C_in = NaHCO3_in/Volume
-C_in
-array1 = np.array(file)
-Flow_Rate = 4.499 * (u.milliliter / u.s)
-Volume = 4 * u.L
-ResidenceTime = (Volume / Flow_Rate).to(u.min)
-Time_Min = array1[:,1] * u.min
-
-C_T_conservative = np.zeros(len(Time_Min)) * u.mol / u.L
-for i in range(0,len(Time_Min)):
-  C_T_conservative[i] = C_in * np.exp(-Time_Min[i]/ResidenceTime)
-  i = i + 1
-
-C_T_conservative
-# plotting
-plt.figure('Conservative Ct',(10,8))
-plt.plot(Time_Min, C_T_conservative)
-# put in your x and y variables
-plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('C_T', fontsize=15)
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\C_T.jpg')
-plt.show()
-
-```
-# Q7 Experiment 1
-Derive an equation for $C_{T}$ as a function of ANC and pH using the following equation:
-$ANC = C_{T}(alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
-
-Solving for $C_{T}$ (assuming $[OH]^{-}$ is negligible) yields:
-$C_T = \frac{ANC_{t} + [H^{+}]}{(a_{1} + 2 a_{2})}$
-
-```python
-C_T_closed = np.zeros(len(Time_Min)) * u.mol / u.L
-
-for i in range(0, len(Time_Min)):
-  C_T_closed[i] = (ANC_Out[i] + invpH(pH1[i])) / (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i]))
-  i = i + 1
 
 
 
-```
-Equilibrium $C_T = \frac{P_{CO2} + K_{H}}{a_{0}}$
 
+## Suggestions and Comments
 
-# Q8 Experiment 1
-```python
-C_T_equil = np.zeros(len(pH1)) * u.mol / u.L
+It would be beneficial for the data to automatically merge into one succinct Excel file.  It was tedious to keep track and organize 10 separate files from 10 trials. If we were analyzing the lake at more points in time it would become difficult to mange the data files.  We believe that it would have been beneficial to have a more effective way to clean the pH probe before trials. Though we spent a significant amount of time cleaning off the probe with a water bottle, we were never sure that the probe was completely clean. We believe that there could have been a more detailed explanation/walk through of the gran plot analysis as well as a simpler explanation of the chemistry behind ANC values and the titration process. An interesting modification could involve looking at how the titration works for a polyprotic acid and using a graph of the derivative of our titration plot to find maxima and determine equivalence points.
 
-for i in range(0, len(pH1)):
-  C_T_equil[i] = (P_CO2 * K_Henry_CO2)  / alpha0_carbonate(pH1[i])
-  i = i + 1
-
-plt.figure('Ct',(10,8))
-plt.plot(Time_Min, C_T_conservative, Time_Min, C_T_closed, Time_Min, C_T_equil)
-# put in your x and y variables
-plt.legend(['Conservative', 'Closed', 'Equilibrium'], loc = 'best')
-plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('C_T (mol/L)', fontsize=15)
-plt.yscale('log')
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\C_T.jpg')
-plt.show()
-```
-
-
-## Q9 Experiment 1
-The lake is best modeled after a closed system, it behaves as a non-volatile system. To change the lake to a volatile system, there would need to be mixing due to a wind current to drive equilibrium with the atmosphere.
-
-
-
-## Q10. Analyze the data from the 2nd experiment and graph the data appropriately what did you learn from the 2nd experiment?
-
-## Experiment 2
-```python
-Flow_Rate2 = 5.0779 * u.milliliter / u.s
-Volume = 4 * u.L
-ResidenceTime = (Volume / Flow_Rate).to(u.min)
-exp2 = pd.read_csv(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain _2.csv')
-exp2_array = np.array(exp2)
-Time_Min2 = exp2_array[:,2]
-ph_exp2 = exp2_array[:,3]
-plt.figure('ax',(10,8))
-plt.plot(Time_Min2, ph_exp2)
-# put in your x and y variables
-plt.xlabel('Time (min)', fontsize=15)
-plt.ylabel('pH', fontsize=15)
-plt.show()
-```
-From the second experiment, we learned that the sensitivity of the electrode in the pH probe to electricity was enough to induce large variability in what should have been predictable behavior of a titration curve. In the first experiment, our data better reflected the true nature of the predictable titration curve.
-
-
-# Additional Questions
-
-1) If we assume that the NaCO3 does not get mixed in with the water, we would need to add a considerable amount of NaCO3. Without mixing, the sodium bicarbonate would settle in solution. The considerations on CMFR no longer guarantee exponential decay behavior in regards to the amount of sodium bicarbonate in the solution. To acheive 50 meq/L you would simply need a 50 mM solution in the lake as the concentration of bicarbonate should not change very much without mixing. For 4 liters, you need 0.02 mols of sodium bicarbonate.
-
-2) Some complicating factors are:
-
-  -The extent of mixing could affect the results due to the residence time not being consistent throughout the experiment. Further, the solution may not be uniform if there were reduced mixing, causing the pH probe to get inaccurate readings that are not representative of the "lake" as a whole.
-
-  -The solubility of CaCO3 is less soluble than NaCO3 in water by a few orders of magnitude, reducing the ability of carbonates to react with H+ ions in the water.
-
-  -Density of a CaCO3 slurry is 2.71 g/cm³. Calcium carbonate without mixing is fated to settle to the bottle of the lake particularly with its low solubility.
-
-  -Too much calcium ions could increase the hardness of the water
-
-Q11. Don’t forget to write a brief paragraph on conclusions and on suggestions using Markdown.
-
-​Conclusions:
-
-The pH probe turned out to be very sensitive since it is really measuring voltage and not pH. In our second experiment we did not ground the apparatus and our graph reflects that. Although the general shape of a titration curve is evident there are many fluctuations.
-
-Suggestions:
-The setup of the lake proved to have some issues as water leaked out of the pipe before reaching the beaker as we measured flow rate.  There were some issues with our apparatus because it was not grounded and accidentally conducted electricity through our experiment. The pH probe turned out to be very sensitive since it is really measuring voltage and not pH. There were some issues with transferring data from ProCaDa to Atom due to the breaks in the csv file where we had made comments during the experiment. However, that issue was resolved since we did not have massive amounts of data to analyze. In the "Questions" section of the lab report, the analysis of a non-stirring option was extremely challenging. Testing the actual rate of gravity-driven NaCO3 dispersion or a brief discussion on how to model this situation in the lab could have been helpful for this analysis. Overall the lab did provide valuable insight into managing acid rain lake remediation and the difference between theoretical and experimental methods.
-
-Q12. Verify that your report and graphs meet the requirements as outlined in the course materials.
+# Verify that your report and graphs meet the requirements as outlined in the course materials.
