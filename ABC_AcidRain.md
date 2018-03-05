@@ -16,12 +16,13 @@ Flow_Rate = 4.499 * u.milliliter / u.s
 Volume = 4 * u.L
 ResidenceTime = (Volume / Flow_Rate).to(u.min)
 Time_Min = array1[:,1] * u.min
+
 pH1 = array1[:,2]
 # plotting
 plt.figure('ax',(10,8))
 plt.plot(Time_Min, pH1)
 # put in your x and y variables
-plt.xlabel('Time (min)', fontsize=15)
+plt.xlabel('Residence Time', fontsize=15)
 plt.ylabel('pH', fontsize=15)
 plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg')
 plt.show()
@@ -83,6 +84,7 @@ print(len(ANC_Out))
 for i in range(0,len(Time_Min)):
   ANC_Out[i] = ANC_in * (1-np.exp(-Time_Min[i]/ResidenceTime)) + ANC_0 * np.exp(-Time_Min[i]/ResidenceTime)
   i = i + 1
+print(ANC_Out[0])
 
 plt.figure('ax',(10,8))
 plt.plot(Time_Min, ANC_Out)
@@ -109,7 +111,7 @@ for i in range(0,len(pH1)):
 
 
 
-
+ANC_Out_Closed[0]
 ```
 
 ## Q5 Experiment 1
@@ -123,6 +125,7 @@ ANC_Out_Open = np.zeros(len(pH1)) * u.mol / u.L
 for i in range(0, len(pH1)):
   ANC_Out_Open[i] = (P_CO2  * K_Henry_CO2) * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) / (alpha0_carbonate(pH1[i])) + (Kw / invpH(pH1[i])) - invpH(pH1[i])
   i = i + 1
+ANC_Out_Open[0]
 
 plt.figure('ax',(10,8))
 ANC_Effluent = plt.plot(Time_Min, ANC_Out, Time_Min, ANC_Out_Closed, Time_Min, ANC_Out_Open)
@@ -234,7 +237,7 @@ plt.xlabel('Time (min)', fontsize=15)
 plt.ylabel('pH', fontsize=15)
 plt.show()
 ```
-From the second experiment, we learned that the sensitivity of the electrode in the pH probe to electricity was enough to induce large variability in what should have been predictable behavior of a titration curve. In the first experiment, our data better reflected the true nature of the predictable titration curve. 
+From the second experiment, we learned that the sensitivity of the electrode in the pH probe to electricity was enough to induce large variability in what should have been predictable behavior of a titration curve. In the first experiment, our data better reflected the true nature of the predictable titration curve.
 
 
 # Additional Questions
