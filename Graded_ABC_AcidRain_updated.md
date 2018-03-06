@@ -10,7 +10,7 @@ from scipy import stats
 
 
 ### Introduction and Objectives
-We are doing this experiment to test the boundaries of the acid neutralizing capacity (ANC) of our lake and examining various methods of determining ANC. To meet our goal we have to test the ANC at various points in the process of remediating a lake with NaCO3. We hoped to observe hydrogen ion conservation, learn how to use the Gran plot to calculate the maximum amount of acid the lake can take before no longer being able to neutralize added acid. Finally we wish to examine whether the ANC of our experiment matched the theoretical ANCs. We expect the results to be applicable to future remediation projects we conduct as Environmental Engineers.This would be particularly useful in projects comparing the qualities of different bodies of water, as ANC is an important characteristic to consider. We will be able to understand more about ANC through this experiment by using the following derivations:
+We are doing this experiment to test the boundaries of the acid neutralizing capacity (ANC) of our lake and examine various methods of determining ANC. To meet our goal we have to test the ANC at various points in the process of remediating a lake with NaCO3. We hoped to observe hydrogen ion conservation, and learn how to use the Gran plot method to calculate the maximum amount of acid the lake can take before no longer being able to neutralize added acid. Finally we wished to examine whether the ANC of our experiment matched the theoretical ANCs. We expect the results to be applicable to future remediation projects we conduct as Environmental Engineers. This would be particularly useful in projects comparing the qualities of different bodies of water, as ANC is an important characteristic to consider. We will be able to understand more about ANC through this experiment by using the following derivations:
 
 $ANC_{out} = \left [ ANC_{in}\cdot \left ( 1-e ^{\frac{-t}{\Theta }} \right )\right ]+   ANC_{0}\cdot e^{\frac{-t}{\Theta }}$
 
@@ -31,9 +31,13 @@ $C = C_{in}(1-e^{\frac{-t}{\theta }})+C_{0}e^{\frac{-t}{\theta}}$
 For a conservative species $C_{T}$ becomes:
 
 $C_{T}=C_{T_{0}}\cdot e^{\frac{-t}{\theta}}$
+
 However, if we were to assume that no carbonates are exchanged with the atmosphere throughout the experiment, we would describe ANC as that of a closed system and calculate it using the following equation (1.13):
+
 $ANC = C_{T} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
+
 In order to get a full understanding of ANC in different conditions, we can also calculate the "open ANC" under the assumption that carbonates are at equilibrium with the atmosphere using the following equation (1.15):
+
   $ANC = \frac{P_{CO_{2}}K_{H}}{a_{0}} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
 
 
@@ -108,7 +112,7 @@ for i in range(0,len(Time_Min)):
 plt.plot(Time_Min/ResidenceTime, ANC_Out)
 plt.xlabel('Residence Time(s) (unitless)')
 plt.ylabel('ANC (mg/L)')
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain Q2 image.jpg')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\AcidRainQ2image.jpg')
 plt.show()
 
 ```
@@ -145,19 +149,20 @@ for i in range(0, len(pH1)):
   ANC_Out_Open[i] = (P_CO2  * K_Henry_CO2) * (alpha1_carbonate(pH1[i]) + alpha2_carbonate(pH1[i])) / (alpha0_carbonate(pH1[i])) + (Kw / invpH(pH1[i])) - invpH(pH1[i])
   i = i + 1
 
-
+#plot the measured ANC of the lake on the same graph as was used to plot the conservative, volatile, and nonvolatile ANC models.
+# ANCMeasured is just an array of the calculated ANC concentrations from the Gran analysis excel files. The laboratory group ABC wrote down the measured ANC values.
 ANCMeasured = np.array([0.00139,0.000916,0.000282,0.000035,-0.0001853])
 Time = np.array([0,5,10,15,20])*u.min
 
 
-plt.figure()
+plt.plot()
 ANC_Effluent = plt.plot(Time_Min/ResidenceTime, ANC_Out, Time_Min/ResidenceTime, ANC_Out_Closed, Time_Min/ResidenceTime, ANC_Out_Open,Time/ResidenceTime, ANCMeasured)
 
 
 plt.legend(['Conservative', 'Closed', 'Open','Measured'], loc = 'best')
 plt.xlabel('Residence Times')
 plt.ylabel('ANC (mg/L)')
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain Q3 image.jpg')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\AcidRainQ3image.jpg')
 
 plt.show()
 
@@ -177,7 +182,7 @@ plt.plot(Time_Min2, ph_exp2)
 # put in your x and y variables
 plt.xlabel('Time (min)')
 plt.ylabel('pH')
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\Acid Rain Q5 image.jpg')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\AcidRainQ4image.jpg')
 plt.show()
 ```
 ```python
@@ -197,7 +202,7 @@ plt.plot(VTitrant, pHtime0, 'r-', EquivVol, pHregression, 'bo')
 plt.xlabel('Titrant Vol (mL)')
 plt.ylabel('pH')
 plt.legend(['Titration Curve', 'Equivalent Vol'])
-plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\titrantpHtime0.jpg')
+plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\Figure5.jpg')
 plt.show()
 ```
 
@@ -223,7 +228,7 @@ slope = slope*(u.mole/u.L)/u.mL
 V_eq = -intercept/slope
 
 print(V_eq)
-#The equivilent volume agrees well with the value calculated by ProCoDA.
+#The equivalent volume agrees well with the value calculated by ProCoDA.
 #create an array of points to draw the linear regression line
 x=[V_eq.magnitude,VTitrant[-1].magnitude ]
 y=[0,(VTitrant[-1]*slope+intercept).magnitude]
@@ -251,53 +256,97 @@ ANC_Conserv = 0.001851 mole / liter
 ### Results
 
 The pH of the lake versus hydraulic residence are in Figure 1.
- ![graph](C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg)
+![figure1](C:\Users\Anthony\github\CEE4530_axa2\images\exp1.jpg)
 
-Figure 1. Measured pH of lake versus dimensionless hydraulic residence time
+Figure 1. Measured pH of lake versus dimensionless hydraulic residence time.
 
 
-The XYZ representing the blah blah are shown in Figure 2.
-![graph](C:\Users\Anthony\github\CEE4530_axa2\Acid Rain Q2 image.jpg)
+![figure2](C:\Users\Anthony\github\CEE4530_axa2\AcidRainQ2image.jpg)
 
 Figure 2. Effluent Lake ANC modeled as a CMFR with conservative ANC
 
 
-The XYZ representing the blah blah are shown in Figure 3.
- ![graph](C:\Users\Anthony\github\CEE4530_axa2\Acid Rain Q3 image.jpg)
+![figure3](C:\Users\Anthony\github\CEE4530_axa2\images\AcidRainQ3image.jpg)
 
-Figure 3. Effluent Lake ANC with a closed system
+Figure 3. Effluent Lake ANC, in various systems including measured ANC.
 
 
-The XYZ representing the blah blah are shown in Figure 5.
- ![graph](C:\Users\Anthony\github\CEE4530_axa2\Acid Rain Q5 image.jpg)
+![figure4](C:\Users\Anthony\github\CEE4530_axa2\images\AcidRainQ4image.jpg)
 
 Figure 4. Effluent Lake ANC with electricity flowing throughout.
 
 
+![figure5](C:\Users\Anthony\github\CEE4530_axa2\images\Figure5.jpg)
+
+Figure 5. Titration volume compared to pH.
+
+
+![figure6](C:\Users\Anthony\github\CEE4530_axa2\images\Gram.jpg)
+
+Figure 6: Gran plot to determine equivalent volume.
+
 
 ### Discussion
 
-In order to get a full understanding of ANC in different conditions, as a completely mixed flow reactor, as a closed system, as well as an open system.
+Our results will help us to get a full understanding of ANC in different conditions; as a completely mixed flow reactor, as a closed system, as well as an open system.
 
-In modeling the system as a completely mixed flow reactor, we can determine ANC using the following equation (1.21) to determine the "conservative ANC", see figure 2 from the results section:
+
+Table 1: Experimental parameters
+
+|            Parameter    | Value     |
+| :------------- | :------------- |
+| Trail #1 Flow Rate (ml/s)   | 4.499       |
+| Trail #2 Flow Rate (ml/s)      | 5.077   |
+| Lake Volume  (L)  | 4  |
+|Titrant Concentration (M HCl)      | 0.1   |
+
+
+When modeling the system as a completely mixed flow reactor (CMFR), we can determine ANC using the following equation (1.21) to determine the "conservative ANC", see Figure 2 from the results section:
 $ANC_{out} = \left [ ANC_{in}\cdot \left ( 1-e ^{\frac{-t}{\Theta }} \right )\right ]+   ANC_{0}\cdot e^{\frac{-t}{\Theta }}$
 
+The results from Figure 2 demonstrate an exponential decline in conservative ANC as residence time increases. Furthermore, the conservative ANC had the highest initial ANC value of all the other calculated ANC values, but ended with the lowest ANC value at the longest residence time (Figure 3).
 
 
-Alternatively, if we were to assume that no carbonates are exchanged with the atmosphere throughout the experiment, we would describe ANC as that of a closed system and calculate it using the following equation (1.13), see figure 3 from the results section:
+Alternatively, if we were to assume that no carbonates are exchanged with the atmosphere throughout the experiment, we would describe ANC as that of a closed system and calculate it using the following equation (1.13). See Figure 3 from the results section:
 $ANC = C_{T} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
 
 
-Finally, we can also calculate the "open ANC" under the assumption that carbonates are at equilibrium with the atmosphere using the following equation (1.15), see figure 4 from the results section:
+Finally, we can also calculate the "open ANC" under the assumption that carbonates are at equilibrium with the atmosphere using the following equation (1.15). See Figure 3 from the results section:
   $ANC = \frac{P_{CO_{2}}K_{H}}{a_{0}} * (alpha_{1} + 2alpha_{2}) + \frac{K_{w}}{\left [ H^{+} \right ]}-\left [ H^{+} \right ]$
 
-The differences amongst these plot demonstrate that
+The various ANC calculations (Conservative, Closed, Open, Measured) versus residence time are compared in Figure 3. The most drastic difference appears to be between Closed versus Conservative ANC values. The Closed calculated ANC value starts with an initial value close to -0.0010 whereas the Conservative ANC has an initial value close to 0.002 (Figure 3).
+
+Figure 4 demonstrates the various pH values over time that were determined in the Acid Rain portion of the lab report. The pH starts at an initial value close to 8.5, but after reaching a low pH of 5.5 at around 15 minutes, climbs back up to a more basic value of just over 8.5 at around 20 minutes.
+
+The shape of our titration curve in Figure 5 reveals the $V_{e}$ value. We can see a drastic decline in pH value from the titrant volume increasing from 0.6 to 0.8 mL, thus, we know that the equivalent volume will be within this range.
+
+Prior to the equivalence point [H=] is not a conserved species because there are carbonates for them to react with.
+
+$${H_2}CO_3^* \overset {K_1} \longleftrightarrow {H^+} + HCO_3^- $$
+
+
+$$HCO_3^ - \overset {{K_2}} \longleftrightarrow {H^ + } + CO_3^{ - 2}$$
+
+However, after the equivalence point the following equations are applicable and we can observe hydrogen ion conservation. See Table 1 for titrant parameters.
+
+We defined the First Gran function as:
+$F_{1}=\frac{V_{s}+V_{t}}{V_{s}}\left[ H^{+} \right ]$ The $F_{1}$ is then plotted as a function of $V_{t}$ and as a result, we gain a straight line slope = $\frac{N_{t}}{V_{s}}$.
+We then are able to find the ANC value using the equation $V_{s}ANC = V_{e}N_{t}$ and solving for ANC = $\frac{V_{e}N_{t}}{V_{s}}$. This resulted in our being able to produce a Gran plot (see Results section, figure 6).
+
+The Gran plot analysis graph reflects the linear increase in hydrogen ion concentration in Figure 6.
+
+$${\text{ANC}} = [HCO_3^ - {\text{] + 2[CO}}_3^{ - 2}{\text{] + [O}}{{\text{H}}^{\text{ - }}}{\text{] - [}}{{\text{H}}^{\text{ + }}}{\text{]}}$$
+
+reduces to  
+
+ (ANC)
+$${\text{ANC}} = - {{\text{[H]}}^{\text{ + }}}{\text{}}$$
 
 
 ### Conclusions
-The conclusions section should not include any new observation. It is the place to summarize the results in a few sentences. Make sure you connect your conclusions to your objectives for doing the research.
 
-The pH probe turned out to be very sensitive since it is really measuring voltage and not pH. In our second experiment we did not ground the apparatus and our graph reflects that. Although the general shape of a titration curve is evident there are many fluctuations.
+The Gran plot analysis of the outcomes of these experimental trials returned an equivalent titration volume of 0.6915 mL and demonstrated the concept of ANC boundaries. We successfully used the Gran Plot method to determine the equivalence point, which agreed with the value calculated by ProCoDA. Our measured ANC values most closely align with that of the Conservative ANC, though maintaining slightly lower values in smaller residence times. This may be due to the similarities in the ways our system was set up and that of the CMFR model, which was used to calculate Conservative ANC. In the trail where we did not ground the apparatus, Figure 4, reflects sensitivity of the pH probe. The datais not as cohesive since the probe turned out to be more sensitive than anticipated since it is really measuring voltage and not pH.
+
 
 #### Suggestions and Comments
 
