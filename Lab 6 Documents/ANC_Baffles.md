@@ -1,5 +1,6 @@
 
 ```python
+from aide_design.play import*
 import scipy
 from scipy import special
 from scipy.optimize import curve_fit
@@ -29,6 +30,7 @@ def aeration_data(DO_column):
     """
 
     dirpath = filedialog.askdirectory()
+
     #return the list of files in the directory
     filenames = os.listdir(dirpath)
     #extract the flowrates from the filenames and apply units
@@ -317,7 +319,7 @@ def Solver_AD_Pe(t_data, C_data, theta_guess, C_bar_guess):
     t_seconds = (t_data.to(u.s)).magnitude
     # assume that a guess of 1 reactor in series is close enough to get a solution
     p0 = [theta_guess.to(u.s).magnitude, C_bar_guess.magnitude,5]
-    popt, pcov = curve_fit(Tracer_AD_Pe, t_seconds, C_unitless, p0, bounds=(0,inf))
+    popt, pcov = curve_fit(Tracer_AD_Pe, t_seconds, C_unitless, p0)
     Solver_theta = popt[0]*u.s
     Solver_C_bar = popt[1]*u(C_units)
     Solver_Pe = popt[2]
@@ -343,5 +345,41 @@ importlib.reload(EPA)
 1. Use multivariable nonlinear regression to obtain the best fit between the experimental data and the two models by minimizing the sum of the squared errors. Use EPA.Solver_AD_Pe and EPA.Solver_CMFR_N. These functions will minimize the error by varying the values of average residence time, (mass of tracer/reactor volume), and either the number of CMFR in series or the Peclet number.
 
 ```Python
+Mass_Dye = ((500 * u.uL) * 100 * u.g / u.L).to(u.mg)
+Vol_Reactor = 2.5 * u.L
+C_initial = Mass_Dye  / Vol_Reactor
+Flow_Rate = 380 * u.mL/u.s
+Residence_Time_CMFR = (Vol_Reactor / Flow_Rate).to(u.s)
+Residence_Time_CMFR
+
+trial1_time = ftime('BaffleTest1.xls',0,-1).to(u.s)
+trial1_time
+trial2_time = ftime('BaffleTest2.xls',0,-1).to(u.s)
+trial3_time = ftime('BaffleTest3.xls',0,-1).to(u.s)
+trial4_time = ftime('BaffleTest4.xls',0,-1).to(u.s)
+trial5_time = ftime('BaffleTest5.xls',0,-1).to(u.s)
+
+trial1_conc = Column_of_data('BaffleTest1.xls',0,-1,1,'mg/L')
+trial2_conc = Column_of_data('BaffleTest2.xls',0,-1,1,'mg/L')
+trial3_conc = Column_of_data('BaffleTest3.xls',0,-1,1,'mg/L')
+trial4_conc = Column_of_data('BaffleTest4.xls',0,-1,1,'mg/L')
+trial5_conc = Column_of_data('BaffleTest5.xls',0,-1,1,'mg/L')
+
+Results_1 = Solver_AD_Pe(trial1_time,trial1_conc,Residence_Time_CMFR, C_initial)
+
+Results_2 = Solver_AD_Pe(trial2_time,trial2_conc,Residence_Time_CMFR, C_initial)
+Results_3 = Solver_AD_Pe(trial3_time,trial3_conc,Residence_Time_CMFR, C_initial)
+Results_4 = Solver_AD_Pe(trial4_time,trial4_conc,Residence_Time_CMFR, C_initial)
+Results_5 = Solver_AD_Pe(trial5_time,trial5_conc,Residence_Time_CMFR, C_initial)
+print(Results_1)
+print(Results_2)
+print(Results_3)
+print(Results_4)
+print(Results_5)
+EPA.Solver
+from sklearn import linear_model
+clf = linear_model.LinearRegression()
+clf.fit([[getattr(t, 'x%d' % i) for i in range(1, 8)] for t in texts],
+        [t.y for t in texts])
 
 ```
