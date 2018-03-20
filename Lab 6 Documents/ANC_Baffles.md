@@ -342,44 +342,208 @@ importlib.reload(EPA)
 
 #### **Laboratory Assignment 5: Reactors**
 
-1. Use multivariable nonlinear regression to obtain the best fit between the experimental data and the two models by minimizing the sum of the squared errors. Use EPA.Solver_AD_Pe and EPA.Solver_CMFR_N. These functions will minimize the error by varying the values of average residence time, (mass of tracer/reactor volume), and either the number of CMFR in series or the Peclet number.
+### Introduction and Objectives
+Lakes, water treatment plants, and river segments are often modeled as reactors. As a result, we conducted this experiment to gain a better understanding of contact time in various reactor designs. We modeled a reactor in a small tank and modified it by adding and removing different baffles in series. This allowed us to compare different designs as we attempted to approach the idealized plug flow reactor model. By comparing the contact time of various trials, we were able to determine an optimal number of baffles and baffle shape in order to reach our goal of maximizing the contact time of the contaminant. This experiment can be applied to the real world when working on something like wastewater treatment. We want to maximize contact time between the substance that removes the contaminant and the contaminant itself. The longer they are in contact the better the water can be purified. Finally we wished to examine whether the of our experiment matched the theoretical model, which we will analyze with multiple linear regression. We can understand more about this process through the following derivations:
+We set up the experiment as a closed system with a small inlet and outlet, added a shot of a conservative tracer and monitored its concentration as it journeyed through the reactor. We sampled at single point to simplify our analysis. To counteract the skew that comes from this method we must at the relationship between the Peclet number and the variance   If a Peclet number is greater than 10 equation (1.27) can be used
+\[Pe = \frac{2 \theta}{\sigma_t ^2}]\\
+
+\Delta h =\frac{( \frac{Q_o}{\ n_oK_o} \frac{4}{\pi d_o^2})^2}{\ 2g}\]
+
+\[K_on_o\frac{\pi d_o^2}{\ 4}\sqrt{2g\Delta h} = Q_r\]
+
+
+  (1.34)
+
+\[E_t*= \sqrt{\frac{Pe}{t^*4\pi}}exp\frac{-(1-t^*)^2 Pe)}{\ 4t^*}\]
+
+\[frac{N^N}{(N-1)!}*t^{N-1}e^{-Nt^*} = E _N_{(t^*)}\]        
+
+Where n is the nth reactor in series.
+
+Where F is the integral of equation (1.1).  
+
+Instead of modeling this system as an extremely complex baffled tank we will examine the mixing in specific baffled reactor sections. We will look at the Peclet number. For the first two trials we attempt to harness the pore’s kinetic energy to create turbulent mixing between baffles. Environments with turbulent mixing often have Reynold number values in the hundreds and follow equation (1.31) when they are in series
+
+\[Re_j_e_t_ = \frac{4Q_r_e_a_c_t_o_r}{\pi*v*d_j_e_t*n_p_o_r_t_s}\]
+
+Ideally we would try to minimize the energy lost through friction by minimizing headloss (1.32)
+
+\[Q_o = K_oA_o\sqrt{2g\Delta h}\]
+
+We can vary several parameter such as the flow rate, or diameter to obtain better conditions.
+In this experiment we will indirectly measure the efficacy of baffles by comparing the value of t* at F = 0.1
+While trying to maximize the value of t* based on EPA standards. Where
+\[t* = t/\theta\]
+
+### Procedures
+
+All steps were completed as described in the CEE 4530 Spring 2018 Lab Manual except for the following modifications. For all trials of this experiment the concentration of our red dye tracer was 100 g/L. The pump flow rate was 380 mL/min and the residence time was approximately 7 minutes. Mass concentration and reactor volume were not measured as described in the lab manual, but estimated (see analysis). NaCl was not added to the reactor either. For trial 1 two equally spaced non-perforated baffles were securely taped (on alternating sides) to the walls of the reactor. The perforated baffles had 4 vertical holes having a 0.75cm diameter. Trial 2 was identical to trial one, but was performed with four perforated baffles. Trails 3, 4, and 5 were completed with four, six and eight non-perforated baffles respectively. However, in Trail 5 we were unable to space the baffles evenly for these trials (see Figures 1 - 4).
+
+![figure1](images\Setup1.jpg)
+Figure 1: Experimental setup for Trial 1: 2 non-perforated baffles
+
+![figure2](images\Setup2.jpg)
+Figure 2: Experimental setup for Trial 2: 4 perforated baffles
+
+![figure4](images\Setup4.jpg)
+Figure 4: Experimental setup for Trial 4: 6 non-perforated baffles
+
+![figure5](images\Setup5.jpg)
+Figure 5: Experimental setup for Trial 5: 8 non-perforated baffles
+
+### Data Analysis
 
 ```Python
 Mass_Dye = ((500 * u.uL) * 100 * u.g / u.L).to(u.mg)
+
 Vol_Reactor = 2.5 * u.L
 C_initial = Mass_Dye  / Vol_Reactor
-Flow_Rate = 380 * u.mL/u.s
+Flow_Rate = (380 * u.mL/u.min).to(u.ml/u.s)
 Residence_Time_CMFR = (Vol_Reactor / Flow_Rate).to(u.s)
-Residence_Time_CMFR
+# Residence_Time_CMFR
 
 trial1_time = ftime('BaffleTest1.xls',0,-1).to(u.s)
-trial1_time
 trial2_time = ftime('BaffleTest2.xls',0,-1).to(u.s)
 trial3_time = ftime('BaffleTest3.xls',0,-1).to(u.s)
 trial4_time = ftime('BaffleTest4.xls',0,-1).to(u.s)
 trial5_time = ftime('BaffleTest5.xls',0,-1).to(u.s)
-
+print(trial1_time)
 trial1_conc = Column_of_data('BaffleTest1.xls',0,-1,1,'mg/L')
 trial2_conc = Column_of_data('BaffleTest2.xls',0,-1,1,'mg/L')
 trial3_conc = Column_of_data('BaffleTest3.xls',0,-1,1,'mg/L')
 trial4_conc = Column_of_data('BaffleTest4.xls',0,-1,1,'mg/L')
 trial5_conc = Column_of_data('BaffleTest5.xls',0,-1,1,'mg/L')
 
-Results_1 = Solver_AD_Pe(trial1_time,trial1_conc,Residence_Time_CMFR, C_initial)
+Results_1AD = Solver_AD_Pe(trial1_time,trial1_conc,Residence_Time_CMFR, C_initial)
 
-Results_2 = Solver_AD_Pe(trial2_time,trial2_conc,Residence_Time_CMFR, C_initial)
-Results_3 = Solver_AD_Pe(trial3_time,trial3_conc,Residence_Time_CMFR, C_initial)
-Results_4 = Solver_AD_Pe(trial4_time,trial4_conc,Residence_Time_CMFR, C_initial)
-Results_5 = Solver_AD_Pe(trial5_time,trial5_conc,Residence_Time_CMFR, C_initial)
-print(Results_1)
-print(Results_2)
-print(Results_3)
-print(Results_4)
-print(Results_5)
-EPA.Solver
-from sklearn import linear_model
-clf = linear_model.LinearRegression()
-clf.fit([[getattr(t, 'x%d' % i) for i in range(1, 8)] for t in texts],
-        [t.y for t in texts])
+Results_2AD = Solver_AD_Pe(trial2_time,trial2_conc,Residence_Time_CMFR, C_initial)
+Results_3AD = Solver_AD_Pe(trial3_time,trial3_conc,Residence_Time_CMFR, C_initial)
+Results_4AD = Solver_AD_Pe(trial4_time,trial4_conc,Residence_Time_CMFR, C_initial)
+Results_5AD = Solver_AD_Pe(trial5_time,trial5_conc,Residence_Time_CMFR, C_initial)
+
+#Solver_CMFR_N(t_data, C_data, theta_guess, C_bar_guess)
+Results_1C = Solver_CMFR_N(trial1_time,trial1_conc,Residence_Time_CMFR, C_initial)
+Results_2C = Solver_CMFR_N(trial2_time,trial2_conc,Residence_Time_CMFR, C_initial)
+Results_3C = Solver_CMFR_N(trial3_time,trial3_conc,Residence_Time_CMFR, C_initial)
+Results_4C = Solver_CMFR_N(trial4_time,trial4_conc,Residence_Time_CMFR, C_initial)
+Results_5C = Solver_CMFR_N(trial5_time,trial5_conc,Residence_Time_CMFR, C_initial)
+
+CModel_1 = (Results_1C.C_bar*E_CMFR_N(trial1_time/Results_1C.theta, Results_1C.N)).to(u.mg/u.L)
+CModel_2 = (Results_2C.C_bar*E_CMFR_N(trial2_time/Results_2C.theta, Results_2C.N)).to(u.mg/u.L)
+CModel_3 = (Results_3C.C_bar*E_CMFR_N(trial3_time/Results_3C.theta, Results_3C.N)).to(u.mg/u.L)
+CModel_4 = (Results_4C.C_bar*E_CMFR_N(trial4_time/Results_4C.theta, Results_4C.N)).to(u.mg/u.L)
+CModel_5 = (Results_5C.C_bar*E_CMFR_N(trial5_time/Results_5C.theta, Results_5C.N)).to(u.mg/u.L)
+
+ADModel_1 = (Results_1AD.C_bar*E_Advective_Dispersion((trial1_time/Results_1AD.theta).to_base_units(), Results_1AD.Pe)).to(u.mg/u.L)
+ADModel_2 = (Results_2AD.C_bar*E_Advective_Dispersion((trial2_time/Results_2AD.theta).to_base_units(), Results_2AD.Pe)).to(u.mg/u.L)
+ADModel_3 = (Results_3AD.C_bar*E_Advective_Dispersion((trial3_time/Results_3AD.theta).to_base_units(), Results_3AD.Pe)).to(u.mg/u.L)
+ADModel_4 = (Results_4AD.C_bar*E_Advective_Dispersion((trial4_time/Results_4AD.theta).to_base_units(), Results_4AD.Pe)).to(u.mg/u.L)
+ADModel_5 = (Results_5AD.C_bar*E_Advective_Dispersion((trial5_time/Results_5AD.theta).to_base_units(), Results_5AD.Pe)).to(u.mg/u.L)
+# Plot
+#Plot the data and the two model curves.
+Trial1 = plt.plot(trial1_time.to(u.min), trial1_conc, 'r', trial1_time.to(u.min), CModel_1, 'b', trial1_time.to(u.min), ADModel_1, 'g')
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Trial 1: 3 un-perforated baffles')
+plt.legend(['Measured','CMFR Model', 'AD Model'])
+plt.savefig(r'images\Baf1.jpg')
+plt.show()
+
+
+Trial2 = plt.plot(trial2_time.to(u.min), trial2_conc, 'r', trial2_time.to(u.min), CModel_2, 'b', trial2_time.to(u.min), ADModel_2, 'g')
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Trial 2: 4 un-perforated baffles')
+plt.legend(['Measured','CMFR Model', 'AD Model'])
+plt.savefig(r'images\Baf2.jpg')
+plt.show()
+
+
+Trial3 = plt.plot(trial3_time.to(u.min), trial3_conc, 'r', trial3_time.to(u.min), CModel_3, 'b', trial3_time.to(u.min), ADModel_3, 'g')
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Trial 3: 4 perforated baffles')
+plt.legend(['Measured','CMFR Model', 'AD Model'])
+plt.savefig(r'images\Baf3.jpg')
+plt.show()
+
+Trial4 = plt.plot(trial4_time.to(u.min), trial4_conc, 'r', trial4_time.to(u.min), CModel_4, 'b', trial4_time.to(u.min), ADModel_4, 'g')
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Trial 4: 6 un-perforated baffles')
+plt.legend(['Measured','CMFR Model', 'AD Model'])
+plt.savefig(r'images\Baf4.jpg')
+plt.show()
+
+Trial5 = plt.plot(trial5_time.to(u.min), trial5_conc, 'r', trial5_time.to(u.min), CModel_5, 'b', trial5_time.to(u.min), ADModel_5, 'g')
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Trial 5: 8 un-perforated baffles')
+plt.legend(['Measured','CMFR Model', 'AD Model'])
+plt.savefig(r'images\Baf5.jpg')
+plt.show()
+##
+
+        literally just this:
+        while (i < (F_CMFR_1_10percent)):
+        j = j+1
+        i = F_CMFR[j]
+
+        then j is index of the 10% value
+^^^ some helpful stuff from CEE 4530 github Issues ^^^
+
+
+Pe = np.array([Results_1AD.Pe, Results_2AD.Pe, Results_3AD.Pe, Results_4AD.Pe, Results_5AD.Pe])
+N = np.array([Results_1C.N, Results_2C.N, Results_3C.N, Results_4C.N, Results_5C.N])
+
+print(Pe)
+print(N)
+### Report the values of t* at F = 0.1 for each of your experiments. Do they meet your expectations?
+#use the trapz code (integrate the entire area under the curve =1) and run a while loop and subtract area (using trapz) until ==0.1  
+
+from numpy import trapz
+# warning trapz only works on data not functions
+
+Area_AUC = np.trapz(Res_1, t1_time, .01) #, axis=-1)#np.trapz([1,2,3], x=[4,6,8])
+print("Area Under Curve =", Area_AUC) # Should equal 1
+
+pAUC = .5
+count = 0
+while pAUC <= .9:
+  #print(pAUC)
+  pAUC = 1 - np.trapz(Results_1, trial1_time, .01) #does trapz do iterations...?
+  count += 1  
+print pAUC(trial1_time)
+print (count)
+t_star = count * .01
+
+#idk I can't really run this code but if either of u get what I'm trying to do...
 
 ```
+
+### Results
+
+![figure5](images\Baf1.jpg)
+Figure 5: Experimental setup for Trial 1: 3 non-perforated baffles
+
+![figure6](images\Baf2.jpg)
+Figure 6: Experimental setup for Trial 2: 2 non-perforated baffles
+
+![figure7](images\Baf3.jpg)
+Figure 7: Experimental setup for Trial 3: 4 perforated baffles
+
+![figure8](images\Baf4.jpg)
+Figure 8: Experimental setup for Trial 4: 6 non-perforated baffles
+
+![figure9](images\Baf5.jpg)
+Figure 9: Experimental setup for Trial 5: 8 non-perforated baffles
+
+Peclet numbers: [10.53600478 10.54333766  5.53475501  9.28524693 14.11370127]
+
+N values: [6.06066189 6.49735332 4.03787393 5.8180678  7.91152394]
+
+### Discussion
+### Conclusions
+### Suggestion & Comments
+
+The baffles had some trouble sticking to the reactor sides so some of the tracer slipped through the cracks. Additionally, the dye was quite dense and a portion of it just sank to the bottom. The process of emptying and rinsing out the reactor between trials could have been more efficient too. We either had to pour the reactor contents into a large beaker (with a lot of resistance from the tubes connecting it to other parts of the apparatus) or let the reactor drain through the effluent tube into the sink (a slow process). The location where we had to inject the dye was not at the optimal position which gave rise to dead volume in our reactor. It would have been interesting to include an innocuous bacteria and compare the concentration of this bacterial contaminant while varying contact times and methods such as using a highly porous medium or examining the efficacy of batch reactors. An alternate way to analyze this data would be comparing our results to more real-world examples. For instance, we were given the opportunity to create multiple different set ups, some of which included sand and rocks. Having the opportunity to analyze and compare more unique methods to achieve similar results to the baffles would be interesting. Moving the due dates close to the due date (or the morning of) is sometimes better than moving it earlier.
