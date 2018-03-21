@@ -353,20 +353,20 @@ We set up the experiment as a closed system with a small inlet and outlet, added
 \[K_on_o\frac{\pi d_o^2}{\ 4}\sqrt{2g\Delta h} = Q_r\]
 
 
+Environments with turbulent mixing often have Reynold number values in the hundreds and follow equation (1.31) when they are in series.
 
-For the first two trials we attempt to harness the pore’s kinetic energy to create turbulent mixing between baffles. Environments with turbulent mixing often have Reynold number values in the hundreds and follow equation (1.31) when they are in series
+$Re_{jet}= \frac{4Q_{reactor}}{n_{port}\pi d_{jet}v }$
 
-\[Re_j_e_t_ = \frac{4Q_r_e_a_c_t_o_r}{\pi*v*d_j_e_t*n_p_o_r_t_s}\]
-
-Ideally we would try to minimize the energy lost through friction by minimizing headloss (1.32)
+Ideally we would try to minimize friction by minimizing headloss
 
 \[Q_o = K_oA_o\sqrt{2g\Delta h}\]
 
 
 
+
 ### Procedures
 
-All steps were completed as described in the CEE 4530 Spring 2018 Lab Manual except for the following modifications. For all trials of this experiment the concentration of our red dye tracer was 100 g/L. The pump flow rate was 380 mL/min and the residence time was approximately 7 minutes. Mass concentration and reactor volume were not measured as described in the lab manual, but estimated (see analysis below). NaCl was not added to the reactor either. For trial 1, two equally spaced non-perforated baffles were securely taped (on alternating sides) to the walls of the reactor. The perforated baffles had 4 vertical holes having a 0.75cm diameter. Trial 2 was identical to trial 1, but was performed with four perforated baffles. Trails 3, 4, and 5 were completed with four, six, and eight non-perforated baffles respectively. However, in Trail 5 we were unable to space the baffles evenly for these trials due to space and material constraints (see Figures 1,2,4,5, No images for setup 3).
+All steps were completed as described in the CEE 4530 Spring 2018 Lab Manual except for the following modifications. For all trials of this experiment the concentration of our red dye tracer was 100 g/L. The pump flow rate was 380 mL/min and the residence time was approximately 7 minutes. Mass concentration and reactor volume were not measured as described in the lab manual, but estimated (see analysis below). NaCl was not added to the reactor either. For trial 1, two equally spaced non-perforated baffles were securely taped (on alternating sides) to the walls of the reactor. The perforated baffles had 4 vertical holes having a 0.75cm diameter. Trial 2 was identical to trial 1, but was performed with four perforated baffles. Trials 3, 4, and 5 were completed with four, six, and eight non-perforated baffles respectively. However, in Trial 5 we were unable to space the baffles evenly for these trials due to space and material constraints (see Figures 1,2,4,5, No images for setup 3).
 
 !(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%206%20Documents/images/Setup1.jpg)
 Figure 1: Experimental setup for Trial 1: 2 non-perforated baffles
@@ -518,6 +518,8 @@ N values: [6.06066189 6.49735332 4.03787393 5.8180678  7.91152394]
 
 Tbar values: [230.0036687999974, 264.0021811199915, 215.00345376000604, 231.0036019199984 209.0037254400084]
 
+T* values: [0.527530642141380, 0.5410033134314013, 0.43860238822551656, 0.5198484669679676, 0.5703401391040229]
+
 Table 1:
 
 |          Parameter                        |   Value   |
@@ -559,11 +561,7 @@ Figure 8: Results for Trial 4: 6 non-perforated baffles
 
 Figure 9: Results for Trial 5: 8 non-perforated baffles
 
-Peclet numbers: [10.53600478 10.54333766  5.53475501  9.28524693 14.11370127]
 
-N values: [6.06066189 6.49735332 4.03787393 5.8180678  7.91152394]
-
-T* values: [0.527530642141380, 0.5410033134314013, 0.43860238822551656, 0.5198484669679676, 0.5703401391040229]
 
 ### Discussion
 Our results will help us to get a full understanding of how modifying the amount of baffles in a reactor affect contact time and how it compares to theoretical models.
@@ -579,8 +577,6 @@ In this experiment we will indirectly measure the efficacy of baffles by compari
 \[frac{N^N}{(N-1)!}*t^{N-1}e^{-Nt^*} = E _N_{(t*)}\]        
 
 Where n is the nth reactor in series and F is the integral of equation the E, exit age distribution equation.
-
-
 
 
 The results in trial 1 appeared to most closely follow a plug-flow reactor (Figure 5). The spikes in the graph can likely be explained by free flowing dye that carved their own path and escaped under the baffles. The relatively high peclet number value of 10.5 in addition to the N value of 6.1 suggests that there was less mixing in this trial (Table 2).
