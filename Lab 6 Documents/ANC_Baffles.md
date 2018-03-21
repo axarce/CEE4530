@@ -475,7 +475,7 @@ plt.legend(['Measured','CMFR Model', 'AD Model'])
 plt.savefig(r'images\Baf4.jpg')
 plt.show()
 
-Trial5 = plt.plot(trial5_time.to(u.min), trial5_conc, 'r', trial5_time.to(u.min), CModel_5, 'b', trial5_time.to(u.min), ADModel_5, 'g')
+Trial5 = ax.plot(trial5_time.to(u.min), trial5_conc, 'r', trial5_time.to(u.min), CModel_5, 'b', trial5_time.to(u.min), ADModel_5, 'g')
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
 plt.title('Trial 5: 8 un-perforated baffles')
@@ -504,7 +504,13 @@ print(N)
 from numpy import trapz
 # warning trapz only works on data not functions
 
-Area_AUC = np.trapz(Res_1, t1_time, .01) #, axis=-1)#np.trapz([1,2,3], x=[4,6,8])
+E1 = E_CMFR_N(trial1_time/Results_1C.theta, Results_1C.N)
+E2 = E_CMFR_N(trial2_time/Results_2C.theta, Results_2C.N)
+E3 = E_CMFR_N(trial3_time/Results_3C.theta, Results_3C.N)
+E4 = E_CMFR_N(trial4_time/Results_4C.theta, Results_4C.N)
+E5 = E_CMFR_N(trial5_time/Results_5C.theta, Results_5C.N)
+
+Area_AUC = np.trapz(trial1_conc, trial1_time, .01) #, axis=-1)#np.trapz([1,2,3], x=[4,6,8])
 print("Area Under Curve =", Area_AUC) # Should equal 1
 
 pAUC = .5
@@ -524,18 +530,23 @@ t_star = count * .01
 ### Results
 
 ![figure5](images\Baf1.jpg)
+
 Figure 5: Experimental setup for Trial 1: 3 non-perforated baffles
 
 ![figure6](images\Baf2.jpg)
+
 Figure 6: Experimental setup for Trial 2: 2 non-perforated baffles
 
 ![figure7](images\Baf3.jpg)
+
 Figure 7: Experimental setup for Trial 3: 4 perforated baffles
 
 ![figure8](images\Baf4.jpg)
+
 Figure 8: Experimental setup for Trial 4: 6 non-perforated baffles
 
 ![figure9](images\Baf5.jpg)
+
 Figure 9: Experimental setup for Trial 5: 8 non-perforated baffles
 
 Peclet numbers: [10.53600478 10.54333766  5.53475501  9.28524693 14.11370127]
