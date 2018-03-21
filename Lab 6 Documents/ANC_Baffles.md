@@ -326,6 +326,7 @@ def Solver_AD_Pe(t_data, C_data, theta_guess, C_bar_guess):
     Reactor_results = collections.namedtuple('Reactor_results','theta C_bar Pe')
     AD = Reactor_results(theta=Solver_theta, C_bar = Solver_C_bar, Pe = Solver_Pe)
     return AD
+
 ```
 
 ```python
@@ -343,26 +344,17 @@ importlib.reload(EPA)
 #### **Laboratory Assignment 5: Reactors**
 
 ### Introduction and Objectives
-Lakes, water treatment plants, and river segments are often modeled as reactors. As a result, we conducted this experiment to gain a better understanding of contact time in various reactor designs. We modeled a reactor in a small tank and modified it by adding and removing different baffles in series. This allowed us to compare different designs as we attempted to approach the idealized plug flow reactor model. By comparing the contact time of various trials, we were able to determine an optimal number of baffles and baffle shape in order to reach our goal of maximizing the contact time of the contaminant. This experiment can be applied to the real world when working on something like wastewater treatment. We want to maximize contact time between the substance that removes the contaminant and the contaminant itself. The longer they are in contact the better the water can be purified. Finally we wished to examine whether the of our experiment matched the theoretical model, which we will analyze with multiple linear regression. We can understand more about this process through the following derivations:
-We set up the experiment as a closed system with a small inlet and outlet, added a shot of a conservative tracer and monitored its concentration as it journeyed through the reactor. We sampled at single point to simplify our analysis. To counteract the skew that comes from this method we must at the relationship between the Peclet number and the variance   If a Peclet number is greater than 10 equation (1.27) can be used
-\[Pe = \frac{2 \theta}{\sigma_t ^2}]\\
+Lakes, water treatment plants, and river segments are often modeled as reactors. As a result, we conducted this experiment to gain a better understanding of contact time in various reactor designs. We modeled a reactor in a small tank and modified it by adding and removing different baffles in series. This allowed us to compare different designs as we attempted to approach the idealized plug flow reactor model. By comparing the contact time of various trials, we were able to determine an optimal number of baffles and baffle shape in order to reach our goal of maximizing the contact time of the contaminant. This experiment can be applied to the real world when working on something like wastewater treatment. In this specific scenario, we want to maximize contact time between the substance that removes the contaminant and the contaminant itself. The longer they are in contact the better the water can be purified. Finally we wished to examine whether the response curve of our experiment matched the theoretical model, which we will analyze with multiple linear regression. We can understand more about this process through the following derivations:
+We set up the experiment as a closed system with a small inlet and outlet, added a shot of a conservative tracer and monitored its concentration as it journeyed through the reactor. We sampled at single point to simplify our analysis. To counteract the skew that comes from this method we must look at the relationship between the Peclet number and the variance. If a Peclet number is greater than 10 equation (1.27 and 1.34) can be used
+\[Pe = \frac{2 \theta}{\sigma_t ^2}\\
 
 \Delta h =\frac{( \frac{Q_o}{\ n_oK_o} \frac{4}{\pi d_o^2})^2}{\ 2g}\]
 
 \[K_on_o\frac{\pi d_o^2}{\ 4}\sqrt{2g\Delta h} = Q_r\]
 
 
-  (1.34)
 
-\[E_t*= \sqrt{\frac{Pe}{t^*4\pi}}exp\frac{-(1-t^*)^2 Pe)}{\ 4t^*}\]
-
-\[frac{N^N}{(N-1)!}*t^{N-1}e^{-Nt^*} = E _N_{(t^*)}\]        
-
-Where n is the nth reactor in series.
-
-Where F is the integral of equation (1.1).  
-
-Instead of modeling this system as an extremely complex baffled tank we will examine the mixing in specific baffled reactor sections. We will look at the Peclet number. For the first two trials we attempt to harness the pore’s kinetic energy to create turbulent mixing between baffles. Environments with turbulent mixing often have Reynold number values in the hundreds and follow equation (1.31) when they are in series
+For the first two trials we attempt to harness the pore’s kinetic energy to create turbulent mixing between baffles. Environments with turbulent mixing often have Reynold number values in the hundreds and follow equation (1.31) when they are in series
 
 \[Re_j_e_t_ = \frac{4Q_r_e_a_c_t_o_r}{\pi*v*d_j_e_t*n_p_o_r_t_s}\]
 
@@ -370,25 +362,22 @@ Ideally we would try to minimize the energy lost through friction by minimizing 
 
 \[Q_o = K_oA_o\sqrt{2g\Delta h}\]
 
-We can vary several parameter such as the flow rate, or diameter to obtain better conditions.
-In this experiment we will indirectly measure the efficacy of baffles by comparing the value of t* at F = 0.1
-While trying to maximize the value of t* based on EPA standards. Where
-\[t* = t/\theta\]
+
 
 ### Procedures
 
-All steps were completed as described in the CEE 4530 Spring 2018 Lab Manual except for the following modifications. For all trials of this experiment the concentration of our red dye tracer was 100 g/L. The pump flow rate was 380 mL/min and the residence time was approximately 7 minutes. Mass concentration and reactor volume were not measured as described in the lab manual, but estimated (see analysis). NaCl was not added to the reactor either. For trial 1 two equally spaced non-perforated baffles were securely taped (on alternating sides) to the walls of the reactor. The perforated baffles had 4 vertical holes having a 0.75cm diameter. Trial 2 was identical to trial one, but was performed with four perforated baffles. Trails 3, 4, and 5 were completed with four, six and eight non-perforated baffles respectively. However, in Trail 5 we were unable to space the baffles evenly for these trials (see Figures 1 - 4).
+All steps were completed as described in the CEE 4530 Spring 2018 Lab Manual except for the following modifications. For all trials of this experiment the concentration of our red dye tracer was 100 g/L. The pump flow rate was 380 mL/min and the residence time was approximately 7 minutes. Mass concentration and reactor volume were not measured as described in the lab manual, but estimated (see analysis below). NaCl was not added to the reactor either. For trial 1, two equally spaced non-perforated baffles were securely taped (on alternating sides) to the walls of the reactor. The perforated baffles had 4 vertical holes having a 0.75cm diameter. Trial 2 was identical to trial 1, but was performed with four perforated baffles. Trails 3, 4, and 5 were completed with four, six, and eight non-perforated baffles respectively. However, in Trail 5 we were unable to space the baffles evenly for these trials due to space and material constraints (see Figures 1,2,4,5, No images for setup 3).
 
-![figure1](images\Setup1.jpg)
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%206%20Documents/images/Setup1.jpg)
 Figure 1: Experimental setup for Trial 1: 2 non-perforated baffles
 
-![figure2](images\Setup2.jpg)
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%206%20Documents/images/Setup2.jpg)
 Figure 2: Experimental setup for Trial 2: 4 perforated baffles
 
-![figure4](images\Setup4.jpg)
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%206%20Documents/images/Setup4.jpg)
 Figure 4: Experimental setup for Trial 4: 6 non-perforated baffles
 
-![figure5](images\Setup5.jpg)
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%206%20Documents/images/Setup5.jpg)
 Figure 5: Experimental setup for Trial 5: 8 non-perforated baffles
 
 ### Data Analysis
@@ -441,7 +430,7 @@ ADModel_4 = (Results_4AD.C_bar*E_Advective_Dispersion((trial4_time/Results_4AD.t
 ADModel_5 = (Results_5AD.C_bar*E_Advective_Dispersion((trial5_time/Results_5AD.theta).to_base_units(), Results_5AD.Pe)).to(u.mg/u.L)
 # Plot
 #Plot the data and the two model curves.
-Trial1 = plt.plot(trial1_time.to(u.min), trial1_conc, 'r', trial1_time.to(u.min), CModel_1, 'b', trial1_time.to(u.min), ADModel_1, 'g')
+Trial1 = plt.plot(trial1_time.to(u.min), trial1_conc, 'ro', trial1_time.to(u.min), CModel_1, 'b', trial1_time.to(u.min), ADModel_1, 'g')
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
 plt.title('Trial 1: 3 un-perforated baffles')
@@ -450,7 +439,7 @@ plt.savefig(r'images\Baf1.jpg')
 plt.show()
 
 
-Trial2 = plt.plot(trial2_time.to(u.min), trial2_conc, 'r', trial2_time.to(u.min), CModel_2, 'b', trial2_time.to(u.min), ADModel_2, 'g')
+Trial2 = plt.plot(trial2_time.to(u.min), trial2_conc, 'ro', trial2_time.to(u.min), CModel_2, 'b', trial2_time.to(u.min), ADModel_2, 'g')
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
 plt.title('Trial 2: 4 un-perforated baffles')
@@ -459,7 +448,7 @@ plt.savefig(r'images\Baf2.jpg')
 plt.show()
 
 
-Trial3 = plt.plot(trial3_time.to(u.min), trial3_conc, 'r', trial3_time.to(u.min), CModel_3, 'b', trial3_time.to(u.min), ADModel_3, 'g')
+Trial3 = plt.plot(trial3_time.to(u.min), trial3_conc, 'ro', trial3_time.to(u.min), CModel_3, 'b', trial3_time.to(u.min), ADModel_3, 'g')
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
 plt.title('Trial 3: 4 perforated baffles')
@@ -467,7 +456,7 @@ plt.legend(['Measured','CMFR Model', 'AD Model'])
 plt.savefig(r'images\Baf3.jpg')
 plt.show()
 
-Trial4 = plt.plot(trial4_time.to(u.min), trial4_conc, 'r', trial4_time.to(u.min), CModel_4, 'b', trial4_time.to(u.min), ADModel_4, 'g')
+Trial4 = plt.plot(trial4_time.to(u.min), trial4_conc, 'ro', trial4_time.to(u.min), CModel_4, 'b', trial4_time.to(u.min), ADModel_4, 'g')
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
 plt.title('Trial 4: 6 un-perforated baffles')
@@ -475,7 +464,7 @@ plt.legend(['Measured','CMFR Model', 'AD Model'])
 plt.savefig(r'images\Baf4.jpg')
 plt.show()
 
-Trial5 = ax.plot(trial5_time.to(u.min), trial5_conc, 'r', trial5_time.to(u.min), CModel_5, 'b', trial5_time.to(u.min), ADModel_5, 'g')
+Trial5 = plt.plot(trial5_time.to(u.min), trial5_conc, 'ro', trial5_time.to(u.min), CModel_5, 'b', trial5_time.to(u.min), ADModel_5, 'g')
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
 plt.title('Trial 5: 8 un-perforated baffles')
@@ -484,77 +473,136 @@ plt.savefig(r'images\Baf5.jpg')
 plt.show()
 ##
 
-        literally just this:
-        while (i < (F_CMFR_1_10percent)):
-        j = j+1
-        i = F_CMFR[j]
-
-        then j is index of the 10% value
-^^^ some helpful stuff from CEE 4530 github Issues ^^^
-
-
 Pe = np.array([Results_1AD.Pe, Results_2AD.Pe, Results_3AD.Pe, Results_4AD.Pe, Results_5AD.Pe])
 N = np.array([Results_1C.N, Results_2C.N, Results_3C.N, Results_4C.N, Results_5C.N])
 
 print(Pe)
 print(N)
 ### Report the values of t* at F = 0.1 for each of your experiments. Do they meet your expectations?
-#use the trapz code (integrate the entire area under the curve =1) and run a while loop and subtract area (using trapz) until ==0.1  
-
-from numpy import trapz
-# warning trapz only works on data not functions
 
 E1 = E_CMFR_N(trial1_time/Results_1C.theta, Results_1C.N)
-E2 = E_CMFR_N(trial2_time/Results_2C.theta, Results_2C.N)
+E2 = E_CMFR_N((trial2_time/Results_2C.theta), Results_2C.N)
 E3 = E_CMFR_N(trial3_time/Results_3C.theta, Results_3C.N)
 E4 = E_CMFR_N(trial4_time/Results_4C.theta, Results_4C.N)
 E5 = E_CMFR_N(trial5_time/Results_5C.theta, Results_5C.N)
 
-Area_AUC = np.trapz(trial1_conc, trial1_time, .01) #, axis=-1)#np.trapz([1,2,3], x=[4,6,8])
-print("Area Under Curve =", Area_AUC) # Should equal 1
+F1 = (np.cumsum(E1)/(Results_1C.theta)).magnitude
+F2 = (np.cumsum(E2)/(Results_2C.theta)).magnitude
+F3 = (np.cumsum(E3)/(Results_3C.theta)).magnitude
+F4 = (np.cumsum(E4)/(Results_4C.theta)).magnitude
+F5 = (np.cumsum(E5)/(Results_5C.theta)).magnitude
 
-pAUC = .5
-count = 0
-while pAUC <= .9:
-  #print(pAUC)
-  pAUC = 1 - np.trapz(Results_1, trial1_time, .01) #does trapz do iterations...?
-  count += 1  
-print pAUC(trial1_time)
-print (count)
-t_star = count * .01
+def T_Bar_10Percent(time, F, Theta):
+    j = 0
+    while (F[j]< 0.1):
+      j = j + 1
 
-#idk I can't really run this code but if either of u get what I'm trying to do...
+    return time[j]/Theta
 
+T_Bar1 = T_Bar_10Percent(trial1_time, F1, Results_1C.theta)
+T_Bar2 = T_Bar_10Percent(trial2_time, F2, Results_2C.theta)
+T_Bar3 = T_Bar_10Percent(trial3_time, F3, Results_3C.theta)
+T_Bar4 = T_Bar_10Percent(trial4_time, F4, Results_4C.theta)
+T_Bar5 = T_Bar_10Percent(trial5_time, F5, Results_5C.theta)
+
+
+T_BarsAt10Percent = [T_Bar1, T_Bar2, T_Bar3, T_Bar4, T_Bar5]
+print(T_BarsAt10Percent)
 ```
 
 ### Results
-
-![figure5](images\Baf1.jpg)
-
-Figure 5: Experimental setup for Trial 1: 3 non-perforated baffles
-
-![figure6](images\Baf2.jpg)
-
-Figure 6: Experimental setup for Trial 2: 2 non-perforated baffles
-
-![figure7](images\Baf3.jpg)
-
-Figure 7: Experimental setup for Trial 3: 4 perforated baffles
-
-![figure8](images\Baf4.jpg)
-
-Figure 8: Experimental setup for Trial 4: 6 non-perforated baffles
-
-![figure9](images\Baf5.jpg)
-
-Figure 9: Experimental setup for Trial 5: 8 non-perforated baffles
 
 Peclet numbers: [10.53600478 10.54333766  5.53475501  9.28524693 14.11370127]
 
 N values: [6.06066189 6.49735332 4.03787393 5.8180678  7.91152394]
 
+Tbar values: [230.0036687999974, 264.0021811199915, 215.00345376000604, 231.0036019199984 209.0037254400084]
+
+Table 1:
+
+|          Parameter                        |   Value   |
+| :------------------------------------------ | :------------- |
+| Flow Rate (ml/min)                     | 380  |
+|    Reactor Volume  (L)                 |2.5   |
+|Titrant Concentration (mg/L Red Dye #40)| 100  |   
+|Titrant Volume (mL Red Dye #40)         | 0.50 | 
+| Residence time                        |  6.579 |
+
+
+Table 2:
+| Trial     | t*   | N    | Pe |
+| ---------- | ----- | ------- |-----|
+| 1      |  0.53  |6.060  | 10.536
+|2      |  0.54  |6.497  | 10.543
+|3      |  0.44  | 4.037 |  5.534
+|4      |  0.52  | 5.818 |  9.285
+|5      |  0.47  |7.9115 | 14.113   
+
+
+![figure5](images\Baf1.jpg)
+
+Figure 5: Results for Trial 1: 3 non-perforated baffles
+
+![figure6](images\Baf2.jpg)
+
+Figure 6: Results for Trial 2: 2 non-perforated baffles
+
+![figure7](images\Baf3.jpg)
+
+Figure 7: Results for Trial 3: 4 perforated baffles
+
+![figure8](images\Baf4.jpg)
+
+Figure 8: Results for Trial 4: 6 non-perforated baffles
+
+![figure9](images\Baf5.jpg)
+
+Figure 9: Results for Trial 5: 8 non-perforated baffles
+
+Peclet numbers: [10.53600478 10.54333766  5.53475501  9.28524693 14.11370127]
+
+N values: [6.06066189 6.49735332 4.03787393 5.8180678  7.91152394]
+
+T* values: [0.527530642141380, 0.5410033134314013, 0.43860238822551656, 0.5198484669679676, 0.5703401391040229]
+
 ### Discussion
+Our results will help us to get a full understanding of how modifying the amount of baffles in a reactor affect contact time and how it compares to theoretical models.
+Instead of modeling this system as an extremely complex baffled tank, we will examine the mixing in specific baffled reactor sections. We will look at the Peclet number and t* values and try to maximize both of them based on EPA standards. Where
+
+\[t* = t/\theta\]
+
+We can vary several parameters such as the flow rate or diameter to obtain better conditions.
+In this experiment we will indirectly measure the efficacy of baffles by comparing the value of t* at F = 0.1.
+
+\[E_t*= \sqrt{\frac{Pe}{t^*4\pi}}exp\frac{-(1-t^*)^2 Pe)}{\ 4t*}\]
+
+\[frac{N^N}{(N-1)!}*t^{N-1}e^{-Nt^*} = E _N_{(t*)}\]        
+
+Where n is the nth reactor in series and F is the integral of equation the E, exit age distribution equation.
+
+
+
+
+The results in trial 1 appeared to most closely follow a plug-flow reactor (Figure 5). The spikes in the graph can likely be explained by free flowing dye that carved their own path and escaped under the baffles. The relatively high peclet number value of 10.5 in addition to the N value of 6.1 suggests that there was less mixing in this trial (Table 2).
+
+Trial 2 was fairly similar to Trial 1 in terms of t*, the time where the cumulative age distribution is 0.1, but ultimately this trial resulted in our highest t* value of .54 (Table 2). This is most likely a result of abnormalities in the data around 5 and a half minutes into the experiment due to tampering with the photometer (Figure 6).
+
+
+Trial 3 demonstrated a relatively low peclet number and N value in comparison to our other trials (Table 2). As a result, we can infer that there was more mixing throughout this trial, causing our reactor setup to be more closely related to that of a CMFR. Furthermore, there was a significant peak in our measured concentration at around 7 minutes, which was most likely a result of human error in adjusting the sensor's position in the reactor (Figure 7). This trial demonstrated our lowest t* value amongst all of the trials (0.44).
+
+In trial 4, we included 6 baffles, which resulted in peclet and N values of 9.3 and 5.8, respectively (Table 2). In comparison to our other trials, these results suggest that the increase in baffle number caused our reactor to more closely simulate that of a plug flow reactor as opposed to a CMFR (Figure 8).
+
+Finally, in trial 5, we included 8 unperforated baffles in order to reduce the mixing in our reactor as much as possible (Figure 9). This resulted in the highest peclet number and N value of all 5 of the trials (Table 2). These results ultimately confirmed our belief that by increasing the number of baffles and reducing the holes through which the contaminant can flow, we will minimize mixing and ultimately increase the contact time of the "contaminant." Comparing the N and Peclet numbers as we increased the number of baffles helped to decrease dispersion in our model and increase contact time. All the t* values met our expectations and fell within a reasonable range of being "average" according to EPA standards. However there were unexpected spikes in the graphs of Trial 1 and Trial 2 so we suspect the t* for those may not be complete reliable. However, Trial 1's N and t* values are consistent with the values of Trial 4.
+
+Visual observation during the course of the experiment showed that some areas of the reactor did not interact with the dye until unintentional axial mixing occurred. Due to the density of the tracer, some dye simply sank to the bottom of the reactor and either remained there or was transported in a non sinuous manner from inlet to outlet. Our t bar values were not equivalent to our hydraulic residence time which provided there was more evidence of dead volume.
+
+Based on our results, for a full scale chlorine contact tank we would recommend, a significantly higher number of baffles. This would help to decrease dispersion and increase contact time between the chlorine and pathogen. We observed that our Peclet number was larger when we had more baffles so the optimal value within our trials was 8 baffles. However, adding more than 8 baffles, as many as could reasonably and cost-effectively fit inside a full scale reactor would be optimal.
+
+
 ### Conclusions
+As highlighted in our results, we found that when comparing our data to a model of a CMFR (Completely Mixed Flow Reactor) in series and to a model of advective dispersion (AD) the trials generally tended towards the AD model. As we modified the experiment by increasing the number of baffles, dispersion decreased as we slowly approached plug flow. This correlates directly with our objective to gain a clearer understanding of contact times across different reactor designs. As a result of our findings in this lab, we are better able to understand one of the most important design considerations for environmental issues such as contaminant removal.
+
+
 ### Suggestion & Comments
 
 The baffles had some trouble sticking to the reactor sides so some of the tracer slipped through the cracks. Additionally, the dye was quite dense and a portion of it just sank to the bottom. The process of emptying and rinsing out the reactor between trials could have been more efficient too. We either had to pour the reactor contents into a large beaker (with a lot of resistance from the tubes connecting it to other parts of the apparatus) or let the reactor drain through the effluent tube into the sink (a slow process). The location where we had to inject the dye was not at the optimal position which gave rise to dead volume in our reactor. It would have been interesting to include an innocuous bacteria and compare the concentration of this bacterial contaminant while varying contact times and methods such as using a highly porous medium or examining the efficacy of batch reactors. An alternate way to analyze this data would be comparing our results to more real-world examples. For instance, we were given the opportunity to create multiple different set ups, some of which included sand and rocks. Having the opportunity to analyze and compare more unique methods to achieve similar results to the baffles would be interesting. Moving the due dates close to the due date (or the morning of) is sometimes better than moving it earlier.
