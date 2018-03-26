@@ -335,9 +335,7 @@ def Solver_AD_Pe(t_data, C_data, theta_guess, C_bar_guess):
 
 ## Introduction and Objectives
 
-
-
-
+We decided to conduct this experiment to examine and understand the relationship between gas transfer and flow rates. Traditionally the oxygen transfer efficiency is quite low (less than 3%). We hoped to gain a clearer understanding of gas exchange through this experiment as it is useful in wastewater treatment plant optimization. Wastewater treatment plants require consistent aerobic degradation, which can be maintained through oxygen transfer into activated sludge tanks. By doing this experiment, we are better able to understand and make decisions regarding the most useful technologies used to enhance such gas transfer by creating a high interface surface area.
 
 ## Procedures
 We followed the procedures as stated in the CEE 4530 Spring 2018 lab manual with a few modifications. Instead of letting the accumulator pressure get to 75%, we set the needle valve to approximately 50% (20,000 Pa). To deoxygenate the 600 ml solution between trials we added 0.4 ml of sodium sulfite and we conducted trials at air flow rates of approximately 0, 30, 70, 160, 370, 850 and 2000 μM/s.
@@ -369,6 +367,7 @@ Flow850_time = ftime('850.txt',0,-1).to(u.s)
 Flow2000_time = ftime('2000.txt',0,-1).to(u.s)
 
 #Plot the representative data set
+cd  C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab
 DO_plot = plt.plot(Flow160_time.to(u.min), Flow160_DO.to(u.mg/u.L), 'ro')
 
 
@@ -384,12 +383,79 @@ P_O2 = 0.21
 C_star = (P_O2*np.exp((1727/temp)-2.105))*u.mg/u.L
 print(C_star)
 
+def C_ratio(C_Star, DO, Time):
+  C_ratio = np.zeros(len(Time))
+  for i in range(0, len(Time)):
+    C_ratio[i] = np.log((C_Star - DO[i])/(C_Star - DO[0]))
+    i = i + 1
+  return C_ratio
 
+C_ratio_0 = C_ratio(C_star, Flow0_DO, Flow0_time)
+C_ratio_30 = C_ratio(C_star, Flow30_DO, Flow30_time)
+C_ratio_70 = C_ratio(C_star, Flow70_DO, Flow70_time)
+C_ratio_160 = C_ratio(C_star, Flow160_DO, Flow160_time)
+C_ratio_370 = C_ratio(C_star, Flow370_DO, Flow370_time)
+C_ratio_850 = C_ratio(C_star, Flow850_DO, Flow850_time)
+C_ratio_2000 = C_ratio(C_star, Flow2000_DO, Flow2000_time)
+
+
+
+kv_0, intercept_0, r_value_0, p_value, std_err = stats.linregress(Flow0_time, C_ratio_0)
+kv_30, intercept_30, r_value_30, p_value, std_err = stats.linregress(Flow30_time, C_ratio_30)
+kv_70, intercept_70, r_value_70, p_value, std_err = stats.linregress(Flow70_time, C_ratio_70)
+kv_160, intercept_160, r_value_160, p_value, std_err = stats.linregress(Flow160_time, C_ratio_160)
+kv_370, intercept_370, r_value_370, p_value, std_err = stats.linregress(Flow370_time, C_ratio_370)
+kv_850, intercept_850, r_value_850, p_value, std_err = stats.linregress(Flow850_time, C_ratio_850)
+kv_2000, intercept_2000, r_value_2000, p_value, std_err = stats.linregress(Flow2000_time, C_ratio_2000)
+kv_0
+kv_30
+k_values = np.array([kv_0, kv_30, kv_70, kv_160, kv_370, kv_850, kv_2000])*-1
+print(k_values)
+flow_values = np.array([0, 30, 70, 160, 370, 850, 2000])*u.umol/u.s
+
+
+plt.plot(Flow0_time, C_ratio_0)
+plt.show()
+
+
+
+#Plot OTE as a function of airlow rate
+oxyen_deficit = 6*u.mg/u.L
 
 ```
 
-#Results
+## Results
 
 In order to calculate C* with our data, we used the formula:
 
-$C^{*} = P_{O_{2}}*e^{(\frac{1727}{T}-2.105)}$
+$P_{O_{2}}*e^{(\frac{1727}{T}-2.105)}$ =  $C^{*}$
+
+We used linear regression to evaluation equation 1.5:
+$ln\frac{C^{*}-C}{C^{*}-C_{0}} = -{k}_{v,l}(t-t_{0})$ in order to get ${k}_{v,l}$ as the slope of the line. Given the apparatus of our experiment, we determined that this simple gas transfer model is appropriate as the gas transfer coefficient is independent of the dissolved oxygen concentration.
+
+The results from our linearized data demonstrated that INSERT RESULTS HERE.
+
+We plotted the oxygen transfer efficiency using equation 1.9:
+OTE = $\frac{\hat{k}_{v,l}(C^{*}-C)VRT}{Q_{air}P_{air}f_{O_{2}}MW_{O_{2}}}$
+
+In order to determine the oxygen transfer efficiency when the molar airflow rate is controlled, we used equation 1.10:
+
+$OTE = \frac{\dot{n}_{aq O_{2}}}{f_{O_{2}}\dot{n}_{air}} = \frac{V\hat{k}_{v,l}(C^{*}-C)}{f_{O_{2}}\dot{n}_{air}MW_{O_{2}}}$
+
+| Parameters             | Values    |
+| :-------------         | :-------- |
+| $\hat{k}_{60}$       |           |
+| $\hat{k}_{30}$         |           |
+| $\hat{k}_{70}$         |           |
+| $\hat{k}_{160}$        |           |
+| $\hat{k}_{160}$        |           |
+|$\hat{k}_{370}$         |           |
+|$\hat{k}_{850}$         |           |
+|$\hat{k}_{2000}$        |           |
+
+## Discussion
+
+## Conclusions
+
+## Suggestions
+While conducting our experiment some large air bubbles stuck to our DO probe and caused some faulty reading and we had to redo one trial. Additionally the probe seemed to lose it’s calibration over the course of the week as everyone had to recalibrate the apparatus  at the beginning of lab. The experimental apparatus was difficult to initially set up; however, it was useful that we were given a whole lab period to do so. A way in which we could modify the experimental apparatus would be to get more reliable dissolved oxygen probes that did not require as much recalibration throughout the experiment. Due to so much of our analysis relying on our dissolved oxygen data, it is important that we have accurate data, which is a direct result of the dissolved oxygen probe quality. The needle valve was also bit difficult to adjust when we were trying to get to 50% pressure in the accumulator. Adding some type of activated sludge would be an interesting way to further explore the idea of oxygen transfer.
