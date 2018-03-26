@@ -336,10 +336,60 @@ def Solver_AD_Pe(t_data, C_data, theta_guess, C_bar_guess):
 ## Introduction and Objectives
 
 
+
+
+
 ## Procedures
+We followed the procedures as stated in the CEE 4530 Spring 2018 lab manual with a few modifications. Instead of letting the accumulator pressure get to 75%, we set the needle valve to approximately 50% (20,000 Pa). To deoxygenate the 600 ml solution between trials we added 0.4 ml of sodium sulfite and we conducted trials at air flow rates of approximately 0, 30, 70, 160, 370, 850 and 2000 μM/s.
 
 
 ## Data Analysis
 ```python
 
+#1 Air Flow rate (test @ 200microM/s)
+#Test_rate =
+#print(Test_rate)
+#3 Plot the representative data set showing dissolved oxygen vs. time
+#Import the dissolved oxygen data from each respective trial
+Flow0_DO = Column_of_data('0.txt',0,-1,2,'mg/L')
+Flow30_DO = Column_of_data('30.txt',0,-1,2,'mg/L')
+Flow70_DO = Column_of_data('70.txt',0,-1,2,'mg/L')
+Flow160_DO = Column_of_data('160.txt',0,-1,2,'mg/L')
+Flow370_DO = Column_of_data('370.txt',0,-1,2,'mg/L')
+Flow850_DO = Column_of_data('850.txt',0,-1,2,'mg/L')
+Flow2000_DO = Column_of_data('2000.txt',0,-1,2,'mg/L')
+
+#Import the time data from each respective trial
+Flow0_time = ftime('0.txt',0,-1).to(u.s)
+Flow30_time = ftime('30.txt',0,-1).to(u.s)
+Flow70_time = ftime('70.txt',0,-1).to(u.s)
+Flow160_time = ftime('160.txt',0,-1).to(u.s)
+Flow370_time = ftime('370.txt',0,-1).to(u.s)
+Flow850_time = ftime('850.txt',0,-1).to(u.s)
+Flow2000_time = ftime('2000.txt',0,-1).to(u.s)
+
+#Plot the representative data set
+DO_plot = plt.plot(Flow160_time.to(u.min), Flow160_DO.to(u.mg/u.L), 'ro')
+
+
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Dissolved Oxygen Vs. Time of 160 Flow Trial')
+plt.savefig(r'images\160Trial.jpg')
+plt.show()
+
+#Calculate C*
+temp = 295
+P_O2 = 0.21
+C_star = (P_O2*np.exp((1727/temp)-2.105))*u.mg/u.L
+print(C_star)
+
+
+
 ```
+
+#Results
+
+In order to calculate C* with our data, we used the formula:
+
+$C^{*} = P_{O_{2}}*e^{(\frac{1727}{T}-2.105)}$
