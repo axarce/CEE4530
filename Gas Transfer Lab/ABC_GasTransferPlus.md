@@ -335,20 +335,29 @@ def Solver_AD_Pe(t_data, C_data, theta_guess, C_bar_guess):
 
 ## Introduction and Objectives
 
-We decided to conduct this experiment to examine and understand the relationship between gas transfer and flow rates. Traditionally the oxygen transfer efficiency is quite low (less than 3%). We hoped to gain a clearer understanding of gas exchange through this experiment as it is useful in wastewater treatment plant optimization. Wastewater treatment plants require consistent aerobic degradation, which can be maintained through oxygen transfer into activated sludge tanks. By doing this experiment, we are better able to understand and make decisions regarding the most useful technologies used to enhance such gas transfer by creating a high interface surface area.
+We decided to conduct this experiment to examine and understand the relationship between gas transfer and flow rates. Traditionally the oxygen transfer efficiency is quite low. We hoped to gain a clearer understanding of gas exchange through this experiment as it is useful in wastewater treatment plant optimization. Wastewater treatment plants require consistent aerobic degradation, which can be maintained through oxygen transfer into activated sludge tanks. By doing this experiment, we are better able to understand and make decisions regarding the most useful technologies used to enhance such gas transfer by creating a high interface surface area.
 
 ## Procedures
-We followed the procedures as stated in the CEE 4530 Spring 2018 lab manual with a few modifications. Instead of letting the accumulator pressure get to 75%, we set the needle valve to approximately 50% (20,000 Pa). To deoxygenate the 600 ml solution between trials we added 0.4 ml of sodium sulfite and we conducted trials at air flow rates of approximately 0, 30, 70, 160, 370, 850 and 2000 μM/s.
+We followed the procedures as stated in the CEE 4530 Spring 2018 lab manual with a few modifications. Instead of letting the accumulator pressure get to 75%, we set the needle valve to approximately 50% (20,000 Pa). To deoxygenate the 600 ml solution between trials we added 0.4 ml of 100 mg/ml of sodium sulfite and we conducted trials at air flow rates of approximately 0, 30, 70, 160, 370, 850 and 2000 μM/s.
 
 
 ## Data Analysis
 ```python
 
 #1 Air Flow rate (test @ 200microM/s)
+# R = 8314 #for Pa, not kPa
+# T = 295 #Kelvin
+# V =
 #Test_rate =
 #print(Test_rate)
+
+
 #3 Plot the representative data set showing dissolved oxygen vs. time
 #Import the dissolved oxygen data from each respective trial
+cd C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab\datafiles
+Pressure = Column_of_data('0.txt',0, -1, 1, 'Pa')
+
+
 Flow0_DO = Column_of_data('0.txt',0,-1,2,'mg/L')
 Flow30_DO = Column_of_data('30.txt',0,-1,2,'mg/L')
 Flow70_DO = Column_of_data('70.txt',0,-1,2,'mg/L')
@@ -366,9 +375,12 @@ Flow370_time = ftime('370.txt',0,-1).to(u.s)
 Flow850_time = ftime('850.txt',0,-1).to(u.s)
 Flow2000_time = ftime('2000.txt',0,-1).to(u.s)
 
-#Plot the representative data set
+#3 and 7: Plot the representative data set W/reaeration model
 cd  C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab
 DO_plot = plt.plot(Flow160_time.to(u.min), Flow160_DO.to(u.mg/u.L), 'ro')
+Time_Min = Flow160_time.to(u.min)
+
+
 
 
 plt.xlabel(r'$time (min)$')
@@ -377,11 +389,11 @@ plt.title('Dissolved Oxygen Vs. Time of 160 Flow Trial')
 plt.savefig(r'images\160Trial.jpg')
 plt.show()
 
-#Calculate C*
+# 4: Calculate C*
 temp = 295
 P_O2 = 0.21
 C_star = (P_O2*np.exp((1727/temp)-2.105))*u.mg/u.L
-print(C_star)
+                      print(C_star)
 
 def C_ratio(C_Star, DO, Time):
   C_ratio = np.zeros(len(Time))
@@ -399,7 +411,7 @@ C_ratio_850 = C_ratio(C_star, Flow850_DO, Flow850_time)
 C_ratio_2000 = C_ratio(C_star, Flow2000_DO, Flow2000_time)
 
 
-
+# 5: Estimate K,vi using linear regression
 kv_0, intercept_0, r_value_0, p_value, std_err = stats.linregress(Flow0_time, C_ratio_0)
 kv_30, intercept_30, r_value_30, p_value, std_err = stats.linregress(Flow30_time, C_ratio_30)
 kv_70, intercept_70, r_value_70, p_value, std_err = stats.linregress(Flow70_time, C_ratio_70)
@@ -407,44 +419,125 @@ kv_160, intercept_160, r_value_160, p_value, std_err = stats.linregress(Flow160_
 kv_370, intercept_370, r_value_370, p_value, std_err = stats.linregress(Flow370_time, C_ratio_370)
 kv_850, intercept_850, r_value_850, p_value, std_err = stats.linregress(Flow850_time, C_ratio_850)
 kv_2000, intercept_2000, r_value_2000, p_value, std_err = stats.linregress(Flow2000_time, C_ratio_2000)
-kv_0
-kv_30
-k_values = np.array([kv_0, kv_30, kv_70, kv_160, kv_370, kv_850, kv_2000])*-1
-print(k_values)
-flow_values = np.array([0, 30, 70, 160, 370, 850, 2000])*u.umol/u.s
 
 
-plt.plot(Flow0_time, C_ratio_0)
+#6: Create graph of C_ratio vs time with lin regression
+
+line = np.zeros(len(Flow70_time))
+for i in range(0,len(Flow70_time)):
+  line[i] = kv_70 * (Flow70_time[i]).magnitude + intercept_70
+  i = i + 1
+
+plt.plot(Flow70_time, C_ratio_70, Flow70_time, line)
+plt.xlabel()
+plt.ylabel()
 plt.show()
 
 
 
-#Plot OTE as a function of airlow rate
-oxyen_deficit = 6*u.mg/u.L
+
+
+#8 Plot Kv,i as a function of airflow rate
+
+
+k_values = np.array([kv_0, kv_30, kv_70, kv_160, kv_370, kv_850, kv_2000])*-1/u.s
+print(k_values)
+flow_values = np.array([0, 30, 70, 160, 370, 850, 2000])*u.umol/u.s
+k_values = k_values[1:]
+
+plt.plot(flow_values, k_values)
+plt.show()
+
+#9
+Flow160 = np.array(Flow160_DO)
+Flow_edit=np.array(Flow160)
+Flow_edit=Flow_edit[12:18]
+
+Time0 = np.array(Flow160_time)
+Time_edit=np.array(Time0)
+Time_edit=Time_edit[12:18]
+
+plt.plot(Time_edit, Flow_edit)
+plt.show()
+
+#P10. lot OTE as a function of airlow rate
+oxygen_deficit = 6*u.mg/u.L
+Volume = 0.5 * u.L
+f_O2 = 0.21
+MW_O2 = 32 * u.g/u.mol
+
+OTE = np.zeros(len(flow_values))
+for i in range(1, len(k_values)):
+  OTE[i] = ((Volume * (k_values[i]) * oxygen_deficit) / (f_O2 * (flow_values[i]) * MW_O2))
+  i = i + 1
+flow_values = flow_values[1:]
+OTE = OTE[1:]
+plt.plot(flow_values, OTE)
+plt.show()
+
+
+#plot the molar rate of oxygen dissolution into the aqueous phase
+
+molar_rate = np.zeros(len(flow_values))*u.mol/u.s
+for i in range(1, len(k_values)):
+  molar_rate[i] = ((Volume / MW_O2) * k_values[i] * oxygen_deficit)
+  i = i + 1
+molar_rate
+
+flow_values = flow_values[1:]
+molar_rate = molar_rate[1:]
+molar_rate
+plt.plot(flow_values, molar_rate)
+plt.show()
 
 ```
 
-## Results
+## Results and Discussion
 
 In order to calculate C* with our data, we used the formula:
 
 $P_{O_{2}}*e^{(\frac{1727}{T}-2.105)}$ =  $C^{*}$
 
-We used linear regression to evaluation equation 1.5:
+We used linear regression to evaluate equation 1.5:
 $ln\frac{C^{*}-C}{C^{*}-C_{0}} = -{k}_{v,l}(t-t_{0})$ in order to get ${k}_{v,l}$ as the slope of the line. Given the apparatus of our experiment, we determined that this simple gas transfer model is appropriate as the gas transfer coefficient is independent of the dissolved oxygen concentration.
 
-The results from our linearized data demonstrated that INSERT RESULTS HERE.
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure1.jpg)
+Figure 1: Dissolved Oxygen v. Time and Reaeration Model v time
 
-We plotted the oxygen transfer efficiency using equation 1.9:
+The representative plot of the linearized data versus time demonstrates a downward sloping line, as such the oxygen deficit is decreasing logarithmically (Figure 1). The slope of the linearized data line is the ${k}_{v,l}$ value.
+
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure2.jpg)
+Figure 2: Linearized Data v. Time
+
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure3.jpg)
+Figure 3: K as a function of airflow rate
+
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure4.jpg)
+Figure 4: OTE as a function of airflow rate
+
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure5.jpg)
+Figure 5: Molar rate of oxygen dissolution
+
+In our plot of ${k}_{v,l}$ as a function of airflow rate, we found that there was an extreme jump in the k value between 30 and 70 flowrates (Figure 3). Our plot demonstrates a peak k value around the 70 flow rate, after which our k values demonstrated a declining k value trend as the flow rate increased. This demonstrates that the efficiency of the aeration decreases as we increase the flowrate.
+
+We modified the oxygen transfer efficiency  equation 1.9:
 OTE = $\frac{\hat{k}_{v,l}(C^{*}-C)VRT}{Q_{air}P_{air}f_{O_{2}}MW_{O_{2}}}$
 
-In order to determine the oxygen transfer efficiency when the molar airflow rate is controlled, we used equation 1.10:
+to consider when the molar airflow rate is controlled, resulting in us using  equation 1.10:
 
 $OTE = \frac{\dot{n}_{aq O_{2}}}{f_{O_{2}}\dot{n}_{air}} = \frac{V\hat{k}_{v,l}(C^{*}-C)}{f_{O_{2}}\dot{n}_{air}MW_{O_{2}}}$
 
+The results from our efficiency plot versus flowrate demonstrate that the efficiency experiences exponential decay with increasing flow rate.
+Further, in order to determine the molar rate of oxygen dissolution into the aqueous phase as a function of airflow rate, we used equation 1.7: $\dot{n} = \frac{V}{MW_{O_{2}}}\frac{dC}{dt}$
+
+The plot of the molar rate of oxygen dissolution decreased with increasing airflow rate.  
+
+Table 1: Experiment Parameters
 | Parameters             | Values    |
 | :-------------         | :-------- |
-| $\hat{k}_{60}$       |           |
+| Test flow rate (μM/s)  | 235       |
+| C*                     |           |
+| $\hat{k}_{60}$         |           |
 | $\hat{k}_{30}$         |           |
 | $\hat{k}_{70}$         |           |
 | $\hat{k}_{160}$        |           |
@@ -453,9 +546,7 @@ $OTE = \frac{\dot{n}_{aq O_{2}}}{f_{O_{2}}\dot{n}_{air}} = \frac{V\hat{k}_{v,l}(
 |$\hat{k}_{850}$         |           |
 |$\hat{k}_{2000}$        |           |
 
-## Discussion
-
 ## Conclusions
 
 ## Suggestions
-While conducting our experiment some large air bubbles stuck to our DO probe and caused some faulty reading and we had to redo one trial. Additionally the probe seemed to lose it’s calibration over the course of the week as everyone had to recalibrate the apparatus  at the beginning of lab. The experimental apparatus was difficult to initially set up; however, it was useful that we were given a whole lab period to do so. A way in which we could modify the experimental apparatus would be to get more reliable dissolved oxygen probes that did not require as much recalibration throughout the experiment. Due to so much of our analysis relying on our dissolved oxygen data, it is important that we have accurate data, which is a direct result of the dissolved oxygen probe quality. The needle valve was also bit difficult to adjust when we were trying to get to 50% pressure in the accumulator. Adding some type of activated sludge would be an interesting way to further explore the idea of oxygen transfer.
+While conducting our experiment some large air bubbles stuck to our DO probe and caused some faulty reading and we had to redo one trial. Additionally the probe seemed to lose it’s calibration over the course of the week as everyone had to recalibrate the apparatus  at the beginning of lab. The experimental apparatus was difficult to initially set up; however, it was useful that we were given a whole lab period to do so. Over the course of the week, some water from our apparatus likely evaporated, but we were not aware of this at the time so we could not correct it. A way in which we could modify the experimental apparatus would be to get more reliable dissolved oxygen probes that did not require as much recalibration throughout the experiment. Due to so much of our analysis relying on our dissolved oxygen data, it is important that we have accurate data, which is a direct result of the dissolved oxygen probe quality. The needle valve was also bit difficult to adjust when we were trying to get to 50% pressure in the accumulator. Adding some type of activated sludge would be an interesting way to further explore the idea of oxygen transfer.
