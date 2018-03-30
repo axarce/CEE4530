@@ -343,13 +343,17 @@ We followed the procedures as stated in the CEE 4530 Spring 2018 lab manual with
 
 ## Data Analysis
 ```python
-
+cd C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab\datafiles
 #1 Air Flow rate (test @ 200microM/s)
-# R = 8314 #for Pa, not kPa
-# T = 295 #Kelvin
-# V =
-#Test_rate =
-#print(Test_rate)
+R = 8314 * u.L * u.Pa / (u.mol * u.K)#for Pa, not kPa
+T = 295*u.K
+V = 0.6*u.L
+Pressure_200 = Column_of_data('200.txt', 0, -1, 2, 'Pa')
+Time_200 = ftime('200.txt', 0, -1).to(u.s)
+slope, intercept, r_value, p_value, std_err = stats.linregress(Time_200, Pressure_200)
+PressureSlope = slope * u.Pa / u.s
+
+N = PressureSlope * V / (R * T)
 
 
 #3 Plot the representative data set showing dissolved oxygen vs. time
