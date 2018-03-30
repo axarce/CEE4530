@@ -355,7 +355,7 @@ We followed the procedures as stated in the CEE 4530 Spring 2018 lab manual with
 #3 Plot the representative data set showing dissolved oxygen vs. time
 #Import the dissolved oxygen data from each respective trial
 cd C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab\datafiles
-Pressure = Column_of_data('0.txt',0, -1, 1, 'Pa')
+
 
 
 Flow0_DO = Column_of_data('0.txt',0,-1,2,'mg/L')
@@ -379,9 +379,6 @@ Flow2000_time = ftime('2000.txt',0,-1).to(u.s)
 cd  C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab
 DO_plot = plt.plot(Flow160_time.to(u.min), Flow160_DO.to(u.mg/u.L), 'ro')
 Time_Min = Flow160_time.to(u.min)
-
-
-
 
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
@@ -428,24 +425,42 @@ for i in range(0,len(Flow70_time)):
   line[i] = kv_70 * (Flow70_time[i]).magnitude + intercept_70
   i = i + 1
 
-plt.plot(Flow70_time, C_ratio_70, Flow70_time, line)
-plt.xlabel()
-plt.ylabel()
+C_ratio_Plot = plt.plot(Flow70_time.to(u.min), C_ratio_70, Flow70_time.to(u.min), line)
+plt.xlabel('Time (min)')
+plt.title('ln[(C* - C)/(C* - C0) of 70umol/s flow')
+plt.legend(['C_ratio of Data', 'Linear Fit'])
+plt.savefig(r'images\Cratio_70.jpg')
 plt.show()
 
+#7: C(t) can be modeled as C(t) = C_star - (C_star - C_0)exp(-kt)
+# For the representative dataset of 160mmol/s:
+C_160 = np.zeros(len(Flow160_time)) * u.mg / u.L
+C0 = 0.5 * u.mg / u.L
+for i in range(0, len(Flow160_time)):
+  C_160[i] = C_star - (C_star - C0)*np.exp(kv_160/u.s*Flow160_time[i])
+  i = i + 1
+
+DO_plot = plt.plot(Flow160_time.to(u.min), Flow160_DO.to(u.mg/u.L), 'ro', Flow160_time.to(u.min), C_160, 'b-')
 
 
+plt.xlabel(r'$time (min)$')
+plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
+plt.title('Dissolved Oxygen Vs. Time of 160 Flow Trial')
+plt.legend(['DO Data', 'Reaeration Model'])
+plt.savefig(r'images\160Trial.jpg')
+plt.show()
 
 
 #8 Plot Kv,i as a function of airflow rate
 
-
 k_values = np.array([kv_0, kv_30, kv_70, kv_160, kv_370, kv_850, kv_2000])*-1/u.s
-print(k_values)
 flow_values = np.array([0, 30, 70, 160, 370, 850, 2000])*u.umol/u.s
-k_values = k_values[1:]
 
-plt.plot(flow_values, k_values)
+k_plot = plt.plot(flow_values[1:], k_values[1:])
+plt.xlabel('Air Flow (umol / s)')
+plt.ylabel('K,vi')
+plt.title('K,vi as a function of Air Flow')
+plt.savefig(r'images\kvalues.jpg')
 plt.show()
 
 #9
@@ -458,6 +473,10 @@ Time_edit=np.array(Time0)
 Time_edit=Time_edit[12:18]
 
 plt.plot(Time_edit, Flow_edit)
+plt.xlabel('Time (sec)')
+plt.ylabel('DO mg/L')
+plt.title('Subset of aeration data to get a better linear growth')
+plt.savefig(r'images\Linearize.jpg')
 plt.show()
 
 #P10. lot OTE as a function of airlow rate
@@ -470,15 +489,18 @@ OTE = np.zeros(len(flow_values))
 for i in range(1, len(k_values)):
   OTE[i] = ((Volume * (k_values[i]) * oxygen_deficit) / (f_O2 * (flow_values[i]) * MW_O2))
   i = i + 1
-flow_values = flow_values[1:]
-OTE = OTE[1:]
-plt.plot(flow_values, OTE)
+
+plt.plot(flow_values[1:], OTE[1:])
+plt.xlabel('Air Flow (umol / s)')
+plt.ylabel('OTE')
+plt.title('Oxygen transfer efficiency as a function of Air Flow Rate')
+plt.savefig(r'images\OTE.jpg')
 plt.show()
 
 
 #plot the molar rate of oxygen dissolution into the aqueous phase
 
-molar_rate = np.zeros(len(flow_values))*u.mol/u.s
+molar_rate = np.zeros(len(flow_values))*u.umol/u.s
 for i in range(1, len(k_values)):
   molar_rate[i] = ((Volume / MW_O2) * k_values[i] * oxygen_deficit)
   i = i + 1
@@ -488,6 +510,10 @@ flow_values = flow_values[1:]
 molar_rate = molar_rate[1:]
 molar_rate
 plt.plot(flow_values, molar_rate)
+plt.xlabel('Air Flow (umol / s)')
+plt.ylabel('Molar Transfer umol / s')
+plt.title('Molar O2  as a function of Air Flow')
+plt.savefig(r'images\O2transfer.jpg')
 plt.show()
 
 ```
