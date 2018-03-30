@@ -458,6 +458,7 @@ plt.show()
 #8 Plot Kv,i as a function of airflow rate
 
 k_values = np.array([kv_0, kv_30, kv_70, kv_160, kv_370, kv_850, kv_2000])*-1/u.s
+k_values
 flow_values = np.array([0, 30, 70, 160, 370, 850, 2000])*u.umol/u.s
 
 k_plot = plt.plot(flow_values[1:], k_values[1:])
@@ -565,16 +566,16 @@ The plot of the molar rate of oxygen dissolution decreased with increasing airfl
 Table 1: Experiment Parameters
 | Parameters             | Values    |
 | :-------------         | :-------- |
-| Test flow rate (μM/s)  | 235       |
-| C*                     |           |
-| $\hat{k}_{60}$         |           |
-| $\hat{k}_{30}$         |           |
-| $\hat{k}_{70}$         |           |
-| $\hat{k}_{160}$        |           |
-| $\hat{k}_{160}$        |           |
-|$\hat{k}_{370}$         |           |
-|$\hat{k}_{850}$         |           |
-|$\hat{k}_{2000}$        |           |
+| Test flow rate (μM/s)  | 193       |
+| C*                     | 8.923 mg/L          |
+| $\hat{k}_{0}$         |  2.495 E -4         |
+| $\hat{k}_{30}$         |    2.7 E - 2       |
+| $\hat{k}_{70}$         |    2.95 E -2        |
+| $\hat{k}_{160}$        |     2.35 E -2      |
+  | $\hat{k}_{370}$        |      2.39  E -2  |
+|$\hat{k}_{850}$         |   2.31 E -2        |
+|$\hat{k}_{2000}$         |   2.08 E -2        |
+
 
 ## Conclusions
 
