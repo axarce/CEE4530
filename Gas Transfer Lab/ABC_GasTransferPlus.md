@@ -532,24 +532,28 @@ $P_{O_{2}}*e^{(\frac{1727}{T}-2.105)}$ =  $C^{*}$
 We used linear regression to evaluate equation 1.5:
 $ln\frac{C^{*}-C}{C^{*}-C_{0}} = -{k}_{v,l}(t-t_{0})$ in order to get ${k}_{v,l}$ as the slope of the line. Given the apparatus of our experiment, we determined that this simple gas transfer model is appropriate as the gas transfer coefficient is independent of the dissolved oxygen concentration.
 
-!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure1.jpg)
-Figure 1: Dissolved Oxygen v. Time and Reaeration Model v time
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Gas%20Transfer%20Lab/images/160Trial.jpg)
+Figure 1: Dissolved Oxygen v. Time and Reaeration Model v. time
 
-The representative plot of the linearized data versus time demonstrates a downward sloping line, as such the oxygen deficit is decreasing logarithmically (Figure 1). The slope of the linearized data line is the ${k}_{v,l}$ value.
+Figure 1b: Dissolved Oxygen v. Time (data subset to obtain more linear plot)
 
-!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure2.jpg)
+The representative of the reaeration model is slightly concave while both the experimental data and the model demonstrate positive slopes. The oxygen deficit is decreasing logarithmically (Figure 1). The slope of the linearized data line is the ${k}_{v,l}$ value. A more linear subset of this data is shown in Figure 1b where residual sulfite may have prevented oxygen level from changing at their true rate.
+
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Gas%20Transfer%20Lab/images/Cratio_70.jpg)
 Figure 2: Linearized Data v. Time
 
-!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure3.jpg)
-Figure 3: K as a function of airflow rate
+The representative plot of the linearized data versus time demonstrates a downward sloping line, as such the oxygen deficit is decreasing logarithmically (Figure 2). The slope of the linearized data line is the ${k}_{v,l}$ value (Table 1).
 
-!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure4.jpg)
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Gas%20Transfer%20Lab/images/kvalues.jpg)
+Figure 3: k as a function of airflow rate
+
+The plot of the k value as a function of time demonstrates a sharps peak near the beginning of the trial and a smaller peak around an airflow of 350 micro moles per second ( Figure 3). Afterwards our k values demonstrated a declining k value trend as the flow rate increased. This demonstrates that the efficiency of the aeration decreases as we increase the flowrate.
+
+
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Gas%20Transfer%20Lab/images/OTE.jpg)
 Figure 4: OTE as a function of airflow rate
 
-!(https://github.com/hispanicberniebro/CEE4530/blob/master/Lab%207%20Documents/images/Figure5.jpg)
-Figure 5: Molar rate of oxygen dissolution
-
-In our plot of ${k}_{v,l}$ as a function of airflow rate, we found that there was an extreme jump in the k value between 30 and 70 flowrates (Figure 3). Our plot demonstrates a peak k value around the 70 flow rate, after which our k values demonstrated a declining k value trend as the flow rate increased. This demonstrates that the efficiency of the aeration decreases as we increase the flowrate.
+The oxygen transfer efficiency (OTE) displays an exponentially declining slope and approaches zero. This supports the idea that gas transfer efficiency decreases as airflow increases (Figure 4).
 
 We modified the oxygen transfer efficiency  equation 1.9:
 OTE = $\frac{\hat{k}_{v,l}(C^{*}-C)VRT}{Q_{air}P_{air}f_{O_{2}}MW_{O_{2}}}$
@@ -558,10 +562,16 @@ to consider when the molar airflow rate is controlled, resulting in us using  eq
 
 $OTE = \frac{\dot{n}_{aq O_{2}}}{f_{O_{2}}\dot{n}_{air}} = \frac{V\hat{k}_{v,l}(C^{*}-C)}{f_{O_{2}}\dot{n}_{air}MW_{O_{2}}}$
 
-The results from our efficiency plot versus flowrate demonstrate that the efficiency experiences exponential decay with increasing flow rate.
-Further, in order to determine the molar rate of oxygen dissolution into the aqueous phase as a function of airflow rate, we used equation 1.7: $\dot{n} = \frac{V}{MW_{O_{2}}}\frac{dC}{dt}$
+!(https://github.com/hispanicberniebro/CEE4530/blob/master/Gas%20Transfer%20Lab/images/O2transfer.jpg)
+Figure 5: Molar rate of oxygen dissolution as a function of time
 
-The plot of the molar rate of oxygen dissolution decreased with increasing airflow rate.  
+The molar rate of oxygen dissolution has a shape similar to Figure 3. There is a sharp peak near the beginning of the trial and another smaller peak around the 300 flow rate, after which the plots slopes down linearly (Figure 5). The plot of the molar rate of oxygen dissolution decreased with increasing airflow rate.  
+
+The results from our efficiency plot versus flowrate demonstrate that the efficiency experiences exponential decay with increasing flow rate.
+Furthermore, in order to determine the molar rate of oxygen dissolution into the aqueous phase as a function of airflow rate, we used equation 1.7:  
+  $\dot{n} = \frac{V}{MW_{O_{2}}}\frac{dC}{dt}$
+
+The air flow rate we obtained was 193 μM/s which is within 20% of the target flow of 200 μM/s (Table 1).
 
 Table 1: Experiment Parameters
 | Parameters             | Values    |
@@ -572,12 +582,14 @@ Table 1: Experiment Parameters
 | $\hat{k}_{30}$         |    2.7 E - 2       |
 | $\hat{k}_{70}$         |    2.95 E -2        |
 | $\hat{k}_{160}$        |     2.35 E -2      |
-  | $\hat{k}_{370}$        |      2.39  E -2  |
+| $\hat{k}_{370}$        |      2.39  E -2  |
 |$\hat{k}_{850}$         |   2.31 E -2        |
 |$\hat{k}_{2000}$         |   2.08 E -2        |
 
 
 ## Conclusions
+
+The results of our experiment gave us a C* value of 8.925 mg/L. The results provide evidence that match the expectations of the theory; as the oxygen deficit decreases the rate of gas transfer decreases and becomes less efficient. The OTE exponentially decreased with airflow rate which implies one should try to keep a low airflow rate and sufficiently large oxygen deficit to maintain a high functioning waste water treatment plant. With this experimental understanding of gas transfer rates in relation to efficiency we will be able to apply this knowledge to future wastewater treatment plant optimization projects.  
 
 ## Suggestions
 While conducting our experiment some large air bubbles stuck to our DO probe and caused some faulty reading and we had to redo one trial. Additionally the probe seemed to lose it’s calibration over the course of the week as everyone had to recalibrate the apparatus  at the beginning of lab. The experimental apparatus was difficult to initially set up; however, it was useful that we were given a whole lab period to do so. Over the course of the week, some water from our apparatus likely evaporated, but we were not aware of this at the time so we could not correct it. A way in which we could modify the experimental apparatus would be to get more reliable dissolved oxygen probes that did not require as much recalibration throughout the experiment. Due to so much of our analysis relying on our dissolved oxygen data, it is important that we have accurate data, which is a direct result of the dissolved oxygen probe quality. The needle valve was also bit difficult to adjust when we were trying to get to 50% pressure in the accumulator. Adding some type of activated sludge would be an interesting way to further explore the idea of oxygen transfer.
