@@ -382,7 +382,7 @@ Flow2000_time = ftime('2000.txt',0,-1).to(u.s)
 #3 and 7: Plot the representative data set W/reaeration model
 cd  C:\Users\Anthony\github\CEE4530_axa2\Gas Transfer Lab
 DO_plot = plt.plot(Flow160_time.to(u.min), Flow160_DO.to(u.mg/u.L), 'ro')
-Time_Min = Flow160_time.to(u.min)
+
 
 plt.xlabel(r'$time (min)$')
 plt.ylabel(r'Concentration $\left ( \frac{mg}{L} \right )$')
@@ -391,7 +391,7 @@ plt.savefig(r'images\160Trial.jpg')
 plt.show()
 
 # 4: Calculate C*
-temp = 295
+temp = 293
 P_O2 = 0.21
 C_star = (P_O2*np.exp((1727/temp)-2.105))*u.mg/u.L
                       print(C_star)
@@ -486,7 +486,7 @@ plt.show()
 
 #P10. lot OTE as a function of airlow rate
 oxygen_deficit = 6*u.mg/u.L
-Volume = 0.5 * u.L
+Volume = (11/16) * u.L
 f_O2 = 0.21
 MW_O2 = 32 * u.g/u.mol
 
