@@ -8,7 +8,7 @@ import importlib
 ###### Elle Blake
 ###### Ajara Cobourne
 
-#### **Data Analysis for Lab 4: Acid Rain and Acid Neutralizing Capacity**
+#### **Laboratory Assignments 3 and 4: Acid Rain and Acid Neutralizing Capacity**
 
 ##Objectives
 
@@ -39,11 +39,6 @@ plt.ylabel('pH')
 plt.legend(['Titration Curve', 'Equivalent Vol'])
 plt.savefig(r'C:\Users\Anthony\github\CEE4530_axa2\images\titrantpHtime0.jpg')
 plt.show()
-
-
-
-ax = point.plot(x='x', y='y', ax=ax, style='bx', label='point')
-
 ```
 
 ```python
